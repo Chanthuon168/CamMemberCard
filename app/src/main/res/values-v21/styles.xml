@@ -8,7 +8,8 @@
     </style>
 
     <style name="MyTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="HeaderTitleStyle" parent="@android:style/TextAppearance">
