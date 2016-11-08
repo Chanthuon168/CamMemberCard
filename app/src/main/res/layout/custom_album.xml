@@ -9,6 +9,8 @@
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="120dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:scaleType="centerCrop"
         android:src="@drawable/img_brown" />
 

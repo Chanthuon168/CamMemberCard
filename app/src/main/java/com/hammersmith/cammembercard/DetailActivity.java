@@ -40,7 +40,7 @@ public class DetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fab.setImageDrawable(getResources().getDrawable(R.drawable.wallet_giftcard));
+                fab.setImageDrawable(getResources().getDrawable(R.drawable.img_gift));
             }
         });
         findViewById(R.id.arrow_back).setOnClickListener(new View.OnClickListener() {
