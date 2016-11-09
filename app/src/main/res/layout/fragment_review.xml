@@ -49,7 +49,7 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/img_brown" />
+                    android:src="@drawable/photo" />
 
             </LinearLayout>
 
@@ -61,7 +61,7 @@
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp">
 
-                <EditText
+                    <EditText
                     android:id="@+id/edComment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

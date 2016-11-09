@@ -55,7 +55,6 @@ public class FragmentReview extends Fragment implements View.OnClickListener {
         adapterReview = new AdapterReview(getActivity(), reviews);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapterReview);
-
         edComment.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

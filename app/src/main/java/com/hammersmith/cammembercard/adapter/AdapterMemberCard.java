@@ -34,13 +34,19 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity, DetailActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 activity.startActivity(intent);
+            }
+        });
+        holder.imgCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.imgCard.setImageDrawable(activity.getResources().getDrawable(R.drawable.img_gift));
             }
         });
     }
@@ -51,10 +57,11 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        ImageView image;
+        ImageView image, imgCard;
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            imgCard = (ImageView) itemView.findViewById(R.id.imgCard);
             image = (ImageView) itemView.findViewById(R.id.image);
         }
     }

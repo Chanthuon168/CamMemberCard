@@ -2,10 +2,13 @@ package com.hammersmith.cammembercard.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.hammersmith.cammembercard.R;
 import com.hammersmith.cammembercard.model.Outlet;
@@ -20,7 +23,7 @@ public class AdapterOutlet extends RecyclerView.Adapter<AdapterOutlet.MyViewHold
     private Activity activity;
     private List<Outlet> outlets;
 
-    public AdapterOutlet(Activity activity, List<Outlet> outlets){
+    public AdapterOutlet(Activity activity, List<Outlet> outlets) {
         this.activity = activity;
         this.outlets = outlets;
     }
@@ -34,7 +37,28 @@ public class AdapterOutlet extends RecyclerView.Adapter<AdapterOutlet.MyViewHold
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogOutlet();
+            }
+        });
+    }
 
+    private void dialogOutlet() {
+        LayoutInflater factory = LayoutInflater.from(activity);
+        final View viewDialog = factory.inflate(R.layout.dialog_scan, null);
+        final AlertDialog dialog = new AlertDialog.Builder(activity).create();
+        dialog.setView(viewDialog);
+        viewDialog.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        ImageView imgCode = (ImageView) viewDialog.findViewById(R.id.imgCode);
+
+        dialog.show();
     }
 
     @Override
@@ -43,8 +67,11 @@ public class AdapterOutlet extends RecyclerView.Adapter<AdapterOutlet.MyViewHold
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout layout;
+
         public MyViewHolder(View itemView) {
             super(itemView);
+            layout = (LinearLayout) itemView.findViewById(R.id.layout);
         }
     }
 }
