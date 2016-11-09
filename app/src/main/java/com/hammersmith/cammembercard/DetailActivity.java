@@ -7,15 +7,23 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
+import com.hammersmith.cammembercard.adapter.AdapterDiscount;
 import com.hammersmith.cammembercard.fragment.FragmentAlbum;
 import com.hammersmith.cammembercard.fragment.FragmentCondition;
 import com.hammersmith.cammembercard.fragment.FragmentMemberCard;
 import com.hammersmith.cammembercard.fragment.FragmentOutlet;
 import com.hammersmith.cammembercard.fragment.FragmentReview;
+import com.hammersmith.cammembercard.model.Discount;
+import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +48,7 @@ public class DetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialogDiscount();
                 fab.setImageDrawable(getResources().getDrawable(R.drawable.img_gift));
             }
         });
@@ -55,6 +64,7 @@ public class DetailActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
+        dialogDiscount();
     }
 
     private void setupTabIcons() {
@@ -101,5 +111,25 @@ public class DetailActivity extends AppCompatActivity {
             return mFragmentTitleList.get(position);
 //            return null;
         }
+    }
+
+    private void dialogDiscount() {
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View viewDialog = factory.inflate(R.layout.dialog_discount, null);
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.setView(viewDialog);
+        viewDialog.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        List<Discount> discounts = new ArrayList<>();
+        RecyclerView recyclerView = (RecyclerView) viewDialog.findViewById(R.id.recyclerView);
+        AdapterDiscount adapterDiscount = new AdapterDiscount(DetailActivity.this, discounts);
+        GridLayoutManager layoutManager = new GridLayoutManager(DetailActivity.this, 3);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapterDiscount);
+        dialog.show();
     }
 }
