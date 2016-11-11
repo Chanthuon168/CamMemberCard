@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.hammersmith.cammembercard.DetailActivity;
 import com.hammersmith.cammembercard.R;
+import com.hammersmith.cammembercard.RoundedImageView;
 import com.hammersmith.cammembercard.model.Member;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
         holder.imgCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.imgCard.setImageDrawable(activity.getResources().getDrawable(R.drawable.img_gift));
+                holder.imgCard.setImageDrawable(activity.getResources().getDrawable(R.drawable.new_gift));
             }
         });
     }
@@ -57,11 +58,12 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        ImageView image, imgCard;
+        ImageView image;
+        RoundedImageView imgCard;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            imgCard = (ImageView) itemView.findViewById(R.id.imgCard);
+            imgCard = (RoundedImageView) itemView.findViewById(R.id.imgCard);
             image = (ImageView) itemView.findViewById(R.id.image);
         }
     }

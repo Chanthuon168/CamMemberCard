@@ -47,7 +47,7 @@ public class AdapterOutlet extends RecyclerView.Adapter<AdapterOutlet.MyViewHold
 
     private void dialogOutlet() {
         LayoutInflater factory = LayoutInflater.from(activity);
-        final View viewDialog = factory.inflate(R.layout.dialog_scan, null);
+        final View viewDialog = factory.inflate(R.layout.dialog_outlet, null);
         final AlertDialog dialog = new AlertDialog.Builder(activity).create();
         dialog.setView(viewDialog);
         viewDialog.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {

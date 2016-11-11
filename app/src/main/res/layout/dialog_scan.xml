@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/icons"
@@ -51,6 +52,63 @@
                 android:orientation="vertical"
                 android:padding="30dp">
 
+                <com.hammersmith.cammembercard.RoundedImageView
+                    android:id="@+id/profile"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/divider"
+                    android:elevation="5dp"
+                    android:padding="2dp"
+                    android:src="@drawable/img_brown"
+                    app:border_width="0dip"
+                    app:is_oval="true"
+                    app:round_background="true" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:text="{fa-star}"
+                        android:textColor="@color/red_light" />
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:text="{fa-star}"
+                        android:textColor="@color/red_light" />
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:text="{fa-star}"
+                        android:textColor="@color/red_light" />
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:text="{fa-star-o}"
+                        android:textColor="@color/red_light" />
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:text="{fa-star-o}"
+                        android:textColor="@color/red_light" />
+
+                </LinearLayout>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -90,7 +148,8 @@
             android:layout_alignParentBottom="true"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
-            android:gravity="center">
+            android:gravity="center"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"

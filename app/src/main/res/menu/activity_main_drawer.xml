@@ -4,32 +4,47 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:icon="@drawable/credit_card"
+            android:title="Membership Cards" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:icon="@drawable/credit_card_multiple"
+            android:title="Collection" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:icon="@drawable/gift"
+            android:title="Member Privileges" />
         <item
             android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:icon="@drawable/file_document_box"
+            android:title="Terms and Use" />
+        <item
+            android:icon="@drawable/shield_outline"
+            android:title="Privacy and Policy" />
+        <item
+            android:icon="@drawable/lightbulb_outline"
+            android:title="User Guide" />
+        <item
+            android:icon="@drawable/flag_outline_variant"
+            android:title="About Us" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="My account">
         <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_account"
+                    android:icon="@drawable/account"
+                    android:title="Profile" />
+                <item
+                    android:id="@+id/nav_my_product"
+                    android:icon="@drawable/account_settings_variant"
+                    android:title="Update Account" />
+                <item
+                    android:id="@+id/nav_logout"
+                    android:icon="@drawable/logout"
+                    android:title="Log out" />
+            </group>
         </menu>
     </item>
 
