@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "301097000726",
+    "project_id": "firebase-membership-card"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:301097000726:android:9cfe199217ff8db4",
+        "android_client_info": {
+          "package_name": "com.hammersmith.cammembercard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "301097000726-6m1hg857nc26b8d7ot6lhdre7ghf2r5v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hammersmith.cammembercard",
+            "certificate_hash": "9128A4CFEE443AE2158530A26165C3184E9F9F19"
+          }
+        },
+        {
+          "client_id": "301097000726-rlpudtm0i0kik5i7sbnthho7r8a6h3eu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDV6XPR0ohugeO2qgrdh9blp5TVfBKEek0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
