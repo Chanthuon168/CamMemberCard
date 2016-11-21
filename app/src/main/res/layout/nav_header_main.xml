@@ -19,20 +19,19 @@
         android:background="@color/icons"
         android:elevation="5dp"
         android:padding="2dp"
-        android:src="@drawable/img_brown"
         app:border_width="0dip"
         app:is_oval="true"
         app:round_background="true" />
 
     <TextView
+        android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Android Studio"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="android.studio@android.com" />

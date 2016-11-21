@@ -1,11 +1,16 @@
 package com.hammersmith.cammembercard;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -25,11 +30,17 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.hammersmith.cammembercard.model.User;
+import com.joanzapata.iconify.widget.IconTextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
     private CallbackManager callbackManager;
@@ -37,6 +48,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private String nameFb, emailFb, linkFb, nameGoogle, emailGoogle, linkGoogle, profileGoogle, strProfile;
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
+    private ProgressDialog mProgressDialog;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +80,75 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         findViewById(R.id.btnFb).setOnClickListener(this);
         findViewById(R.id.btnGoogleSignIn).setOnClickListener(this);
         buildGoogleApiClient(null);
+        if (PrefUtils.getCurrentUser(LoginActivity.this) != null) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            finish();
+        }
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            if (extras.containsKey("isNewItem")) {
+                boolean isNew = extras.getBoolean("isNewItem", false);
+                if (!isNew) {
+                    dialogMessage("Account has been registered successfully! Please activate on your email.");
+                }
+            }
+        }
+    }
+
+    private void dialogMessage(String strMessage) {
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View viewDialog = factory.inflate(R.layout.layout_dialog, null);
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.setView(viewDialog);
+        viewDialog.findViewById(R.id.cancel).setVisibility(View.GONE);
+        TextView message = (TextView) viewDialog.findViewById(R.id.message);
+        message.setText(strMessage);
+        IconTextView icon = (IconTextView) viewDialog.findViewById(R.id.icon);
+        icon.setText("{fa-times-circle}");
+        viewDialog.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                String url = "https://mail.google.com";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
+
+        dialog.show();
+    }
+    private void dialogActivate(String strMessage) {
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View viewDialog = factory.inflate(R.layout.layout_dialog, null);
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.setView(viewDialog);
+        TextView message = (TextView) viewDialog.findViewById(R.id.message);
+        message.setText(strMessage);
+        IconTextView icon = (IconTextView) viewDialog.findViewById(R.id.icon);
+        icon.setText("{fa-times-circle}");
+        TextView activate = (TextView) viewDialog.findViewById(R.id.ok);
+        activate.setText("Activate");
+        activate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = "https://mail.google.com";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
+        viewDialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     private void buildGoogleApiClient(String accountName) {
@@ -110,8 +192,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             profileGoogle = String.valueOf(acct.getPhotoUrl());
             Log.d("googleData", nameGoogle + emailGoogle + linkGoogle);
             if (profileGoogle.equals("null")) {
-//                profileGoogle = ApiClient.BASE_URL + "images/user.png";
+                profileGoogle = ApiClient.BASE_URL + "images/user.png";
             }
+            user = new User();
+            user.setName(nameGoogle);
+            user.setEmail(emailGoogle);
+            user.setSocialLink(linkGoogle);
+            user.setPhoto(profileGoogle);
+            PrefUtils.setCurrentUser(user, LoginActivity.this);
+            saveUserSocial(nameGoogle, emailGoogle, profileGoogle, linkGoogle, "gg");
             signOut();
         } else {
             Toast.makeText(this, "Sign Out", Toast.LENGTH_SHORT).show();
@@ -149,6 +238,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         emailFb = json.getString("email");
                         linkFb = json.getString("id");
                         Log.d("facebookData", nameFb + emailFb + linkFb);
+                        String photo = "https://graph.facebook.com/" + linkFb + "/picture?type=large";
+                        user = new User();
+                        user.setName(nameFb);
+                        user.setEmail(emailFb);
+                        user.setSocialLink(linkFb);
+                        user.setPhoto(photo);
+                        PrefUtils.setCurrentUser(user, LoginActivity.this);
+                        saveUserSocial(nameFb, emailFb, photo, linkFb, "fb");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -159,6 +256,34 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         parameters.putString("fields", "id,name,email,link");
         request.setParameters(parameters);
         request.executeAsync();
+    }
+
+    private void saveUserSocial(String name, String email, String photo, String socialLink, String socialType) {
+        showProgressDialog();
+        user = new User(name, email, photo, socialLink, socialType);
+        ApiInterface serviceUserLogin = ApiClient.getClient().create(ApiInterface.class);
+        Call<User> callLogin = serviceUserLogin.createUserBySocial(user);
+        callLogin.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                user = response.body();
+                if (user != null) {
+                    if (user.getMsg().equals("success")) {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+                hideProgressDialog();
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                hideProgressDialog();
+                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void signIn() {
@@ -187,5 +312,38 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("Processing...");
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        hideProgressDialog();
+    }
+
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    protected void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
     }
 }

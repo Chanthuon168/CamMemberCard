@@ -1,5 +1,8 @@
 package com.hammersmith.cammembercard;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,21 +24,35 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.hammersmith.cammembercard.adapter.AdapterMemberCard;
 import com.hammersmith.cammembercard.fragment.FragmentHome;
 import com.hammersmith.cammembercard.model.Member;
+import com.hammersmith.cammembercard.model.User;
 import com.joanzapata.iconify.widget.IconTextView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private FragmentHome fragmentHome;
+    private View mHeaderView;
+    private User user, userSocial;
+    private TextView name, email;
+    private RoundedImageView profile;
+    private Context context = MainActivity.this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        user = PrefUtils.getCurrentUser(MainActivity.this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         initScreen();
@@ -48,6 +65,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        mHeaderView = navigationView.getHeaderView(0);
+        name = (TextView) mHeaderView.findViewById(R.id.name);
+        email = (TextView) mHeaderView.findViewById(R.id.email);
+        profile = (RoundedImageView) mHeaderView.findViewById(R.id.profile);
+        userSocial = new User(user.getSocialLink());
+        ApiInterface serviceUser = ApiClient.getClient().create(ApiInterface.class);
+        Call<User> callUser = serviceUser.getUser(userSocial);
+        callUser.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                user = response.body();
+                name.setText(user.getName());
+                email.setText(user.getEmail());
+                Uri uri = Uri.parse(user.getPhoto());
+                context = profile.getContext();
+                Picasso.with(context).load(uri).into(profile);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override
@@ -74,6 +114,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_manage) {
 
+        } else if (id == R.id.nav_logout) {
+            FacebookSdk.sdkInitialize(getApplicationContext());
+            PrefUtils.clearCurrentUser(MainActivity.this);
+            LoginManager.getInstance().logOut();
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
