@@ -1,9 +1,13 @@
 package com.hammersmith.cammembercard;
 
+import com.hammersmith.cammembercard.model.MemberCard;
 import com.hammersmith.cammembercard.model.User;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 /**
@@ -18,4 +22,10 @@ public interface ApiInterface {
 
     @POST("user/register")
     Call<User> userRegister(@Body User user);
+
+    @POST("user/loginaccount")
+    Call<User> userLoginByEmail(@Body User user);
+
+    @GET("get/membercard")
+    Call<List<MemberCard>> getMembershipCard();
 }

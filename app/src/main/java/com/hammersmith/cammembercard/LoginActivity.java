@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +50,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
     private ProgressDialog mProgressDialog;
-    private User user;
+    private User user, userPref;
+    private String strEmail, strPassword;
+    private EditText email, password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,20 +82,25 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         findViewById(R.id.signUp).setOnClickListener(this);
         findViewById(R.id.btnFb).setOnClickListener(this);
         findViewById(R.id.btnGoogleSignIn).setOnClickListener(this);
+        findViewById(R.id.l_login).setOnClickListener(this);
+        email = (EditText) findViewById(R.id.input_email);
+        password = (EditText) findViewById(R.id.input_password);
         buildGoogleApiClient(null);
+
         if (PrefUtils.getCurrentUser(LoginActivity.this) != null) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             finish();
         }
+
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
             if (extras.containsKey("isNewItem")) {
                 boolean isNew = extras.getBoolean("isNewItem", false);
                 if (!isNew) {
-                    dialogMessage("Account has been registered successfully! Please activate on your email.");
+                    dialogMessage("Account has been registered successfully! Please activate account on your email.");
                 }
             }
         }
@@ -103,24 +111,39 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         final View viewDialog = factory.inflate(R.layout.layout_dialog, null);
         final AlertDialog dialog = new AlertDialog.Builder(this).create();
         dialog.setView(viewDialog);
-        viewDialog.findViewById(R.id.cancel).setVisibility(View.GONE);
         TextView message = (TextView) viewDialog.findViewById(R.id.message);
         message.setText(strMessage);
+        TextView cancel = (TextView) viewDialog.findViewById(R.id.cancel);
+        TextView ok = (TextView) viewDialog.findViewById(R.id.ok);
         IconTextView icon = (IconTextView) viewDialog.findViewById(R.id.icon);
         icon.setText("{fa-times-circle}");
-        viewDialog.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+        if (strMessage.equals("Email or password is incorrect")) {
+            cancel.setText("Try Again");
+            ok.setVisibility(View.GONE);
+        } else {
+            cancel.setText("Close");
+            ok.setText("Activate");
+            ok.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                    String url = "https://mail.google.com";
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                }
+            });
+        }
+        cancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 dialog.dismiss();
-                String url = "https://mail.google.com";
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
             }
         });
 
         dialog.show();
     }
+
     private void dialogActivate(String strMessage) {
         LayoutInflater factory = LayoutInflater.from(this);
         final View viewDialog = factory.inflate(R.layout.layout_dialog, null);
@@ -306,13 +329,54 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             case R.id.btnGoogleSignIn:
                 signIn();
                 break;
+            case R.id.l_login:
+                strEmail = email.getText().toString();
+                strPassword = password.getText().toString();
+                loginByEmail(strEmail, strPassword);
+                break;
         }
+    }
+
+    private void loginByEmail(String email, String password) {
+        showProgressDialog();
+        user = new User(email, password);
+        ApiInterface serviceLoginByEmail = ApiClient.getClient().create(ApiInterface.class);
+        Call<User> callLoginByEmail = serviceLoginByEmail.userLoginByEmail(user);
+        callLoginByEmail.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                user = response.body();
+                if (user.getMsg().equals("available")) {
+                    userPref = new User();
+                    userPref.setName(user.getName());
+                    userPref.setEmail(user.getEmail());
+                    userPref.setSocialLink(user.getSocialLink());
+                    userPref.setPhoto(user.getPhoto());
+                    PrefUtils.setCurrentUser(userPref, LoginActivity.this);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(intent);
+                    finish();
+                } else if (user.getMsg().equals("Account haven't verify yet")) {
+                    dialogActivate("Account haven't verify yet");
+                } else {
+                    dialogMessage(user.getMsg());
+                }
+                hideProgressDialog();
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                hideProgressDialog();
+            }
+        });
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);

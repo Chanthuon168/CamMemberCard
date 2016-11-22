@@ -12,6 +12,6 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/img_brown" />
+        android:src="@drawable/cake" />
 
 </LinearLayout>

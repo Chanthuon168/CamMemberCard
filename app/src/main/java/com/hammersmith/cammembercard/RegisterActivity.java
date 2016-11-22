@@ -82,6 +82,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
             }
         });
         setContentView(R.layout.activity_register);
+        view = findViewById(R.id.lRegister);
         findViewById(R.id.signIn).setOnClickListener(this);
         findViewById(R.id.btnFb).setOnClickListener(this);
         findViewById(R.id.btnGoogleSignIn).setOnClickListener(this);
@@ -365,6 +366,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);

@@ -4,12 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -18,23 +14,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
-import com.hammersmith.cammembercard.adapter.AdapterMemberCard;
 import com.hammersmith.cammembercard.fragment.FragmentHome;
-import com.hammersmith.cammembercard.model.Member;
 import com.hammersmith.cammembercard.model.User;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -142,6 +130,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dialog.setView(viewDialog);
         TextView message = (TextView) viewDialog.findViewById(R.id.message);
         message.setText(strMessage);
+        IconTextView icon = (IconTextView) viewDialog.findViewById(R.id.icon);
+        icon.setText("{fa-times-circle}");
         TextView activate = (TextView) viewDialog.findViewById(R.id.ok);
         activate.setText("Exit");
         activate.setOnClickListener(new View.OnClickListener() {

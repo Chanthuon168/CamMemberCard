@@ -138,7 +138,7 @@
                             card_view:cardElevation="5dp">
 
                             <ImageView
-                                android:id="@+id/image"
+                                android:id="@+id/image_card"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:scaleType="centerCrop"
@@ -156,6 +156,7 @@
                         android:paddingLeft="5dp">
 
                         <TextView
+                            android:id="@+id/name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Brown Coffe Cambodia"
@@ -176,6 +177,7 @@
                                 android:textColor="@color/colorPrimary" />
 
                             <TextView
+                                android:id="@+id/address"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
