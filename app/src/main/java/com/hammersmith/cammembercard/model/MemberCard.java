@@ -16,6 +16,9 @@ public class MemberCard {
     private String name;
     @SerializedName("address")
     private String address;
+    @SerializedName("exp")
+    private String expDate;
+
     public MemberCard(){}
 
     public String getAddress() {
@@ -56,5 +59,13 @@ public class MemberCard {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getExpDate() {
+        return expDate;
+    }
+
+    public void setExpDate(String expDate) {
+        this.expDate = expDate;
     }
 }

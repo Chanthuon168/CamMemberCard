@@ -1,10 +1,13 @@
 package com.hammersmith.cammembercard.fragment;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +33,9 @@ public class FragmentMemberCard extends Fragment {
     private AdapterMemberCard adapterMemberCard;
     private LinearLayoutManager layoutManager;
     private List<MemberCard> members = new ArrayList<>();
+    private SwipeRefreshLayout swipeRefresh;
+    private ProgressDialog mProgressDialog;
+    private int sizeMembership;
 
     @Nullable
     @Override
@@ -38,15 +44,29 @@ public class FragmentMemberCard extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapterMemberCard);
+        showProgressDialog();
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        swipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+        recyclerView.setNestedScrollingEnabled(false);
+
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData();
+            }
+        });
         ApiInterface serviceMembership = ApiClient.getClient().create(ApiInterface.class);
         Call<List<MemberCard>> callMember = serviceMembership.getMembershipCard();
         callMember.enqueue(new Callback<List<MemberCard>>() {
             @Override
             public void onResponse(Call<List<MemberCard>> call, Response<List<MemberCard>> response) {
                 members = response.body();
+                Log.d("membercard", members.toArray().toString());
+                sizeMembership = members.size();
                 adapterMemberCard = new AdapterMemberCard(getActivity(), members);
+                recyclerView.setAdapter(adapterMemberCard);
                 adapterMemberCard.notifyDataSetChanged();
+                hideProgressDialog();
             }
 
             @Override
@@ -55,5 +75,51 @@ public class FragmentMemberCard extends Fragment {
             }
         });
         return view;
+    }
+
+    private void refreshData() {
+        ApiInterface serviceMembership = ApiClient.getClient().create(ApiInterface.class);
+        Call<List<MemberCard>> callMember = serviceMembership.getMembershipCard();
+        callMember.enqueue(new Callback<List<MemberCard>>() {
+            @Override
+            public void onResponse(Call<List<MemberCard>> call, Response<List<MemberCard>> response) {
+                members = response.body();
+                if (sizeMembership != members.size()) {
+                    adapterMemberCard = new AdapterMemberCard(getActivity(), members);
+                    recyclerView.setAdapter(adapterMemberCard);
+                    adapterMemberCard.notifyDataSetChanged();
+                    sizeMembership = members.size();
+                }
+                swipeRefresh.setRefreshing(false);
+                adapterMemberCard.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<List<MemberCard>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(getActivity());
+            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        hideProgressDialog();
     }
 }

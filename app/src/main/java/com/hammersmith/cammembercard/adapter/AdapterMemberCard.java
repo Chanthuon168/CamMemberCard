@@ -41,7 +41,7 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         Uri uri = Uri.parse(ApiClient.BASE_URL + members.get(position).getImgCard());
         context = holder.image.getContext();
         Picasso.with(context).load(uri).into(holder.image);
@@ -54,6 +54,11 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity, DetailActivity.class);
+                intent.putExtra("id", members.get(position).getId());
+                intent.putExtra("exp", members.get(position).getExpDate());
+                intent.putExtra("name", members.get(position).getName());
+                intent.putExtra("image_card", members.get(position).getImgCard());
+
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 activity.startActivity(intent);
             }

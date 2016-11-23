@@ -56,8 +56,8 @@ public class FragmentHome extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new FragmentMemberCard(), "Member Card");
-        adapter.addFragment(new FragmentMemberCard(), "Collection");
-        adapter.addFragment(new FragmentMemberCard(), "Member Privileges");
+        adapter.addFragment(new FragmentCollection(), "Collection");
+        adapter.addFragment(new FragmentPrivilege(), "Member Privileges");
         viewPager.setAdapter(adapter);
     }
 

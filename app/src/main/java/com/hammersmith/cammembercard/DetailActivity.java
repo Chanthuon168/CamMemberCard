@@ -1,6 +1,7 @@
 package com.hammersmith.cammembercard;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hammersmith.cammembercard.adapter.AdapterDiscount;
@@ -24,9 +26,12 @@ import com.hammersmith.cammembercard.fragment.FragmentOutlet;
 import com.hammersmith.cammembercard.fragment.FragmentReview;
 import com.hammersmith.cammembercard.model.Discount;
 import com.joanzapata.iconify.widget.IconTextView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.hammersmith.cammembercard.R.id.image_card;
 
 public class DetailActivity extends AppCompatActivity {
     private Context context;
@@ -39,11 +44,29 @@ public class DetailActivity extends AppCompatActivity {
             R.drawable.home,
             R.drawable.comment_processing
     };
+    private String strExpDate, strName, strImgCard;
+    private TextView expDate, name;
+    private ImageView image;
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        expDate = (TextView) findViewById(R.id.expDate);
+        name = (TextView) findViewById(R.id.name);
+        image = (ImageView) findViewById(R.id.image);
+        if (getIntent() != null) {
+            id = getIntent().getIntExtra("id", 0);
+            strExpDate = getIntent().getStringExtra("exp");
+            strName = getIntent().getStringExtra("name");
+            strImgCard = getIntent().getStringExtra("image_card");
+            expDate.setText("EXP. " + strExpDate);
+            name.setText(strName);
+            Uri uri = Uri.parse(ApiClient.BASE_URL + strImgCard);
+            context = image.getContext();
+            Picasso.with(context).load(uri).into(image);
+        }
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +147,10 @@ public class DetailActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+        RoundedImageView image = (RoundedImageView) viewDialog.findViewById(R.id.image_card);
+        Uri uri = Uri.parse(ApiClient.BASE_URL+strImgCard);
+        context = image.getContext();
+        Picasso.with(context).load(uri).into(image);
         List<Discount> discounts = new ArrayList<>();
         RecyclerView recyclerView = (RecyclerView) viewDialog.findViewById(R.id.recyclerView);
         AdapterDiscount adapterDiscount = new AdapterDiscount(DetailActivity.this, discounts);
@@ -131,5 +158,9 @@ public class DetailActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapterDiscount);
         dialog.show();
+    }
+
+    public int getMyData() {
+        return id;
     }
 }

@@ -59,6 +59,9 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".RegisterActivity"></activity>
+        <activity
+            android:name=".ImageActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
     </application>
 
 </manifest>
