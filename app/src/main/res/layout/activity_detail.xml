@@ -1,7 +1,6 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -59,53 +58,28 @@
                         android:gravity="center"
                         android:orientation="vertical">
 
-                        <RelativeLayout
+                        <android.support.v7.widget.CardView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:elevation="5dp"
+                            card_view:cardBackgroundColor="@android:color/white"
+                            card_view:cardCornerRadius="15dp"
+                            card_view:cardElevation="2dp"
+                            card_view:cardUseCompatPadding="true">
 
-                            <android.support.v7.widget.CardView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="1.5dp"
-                                android:layout_marginTop="1.5dp"
-                                android:elevation="5dp"
-                                card_view:cardBackgroundColor="@android:color/white"
-                                card_view:cardCornerRadius="15dp"
-                                card_view:cardElevation="2dp"
-                                card_view:cardUseCompatPadding="true">
+                            <LinearLayout
+                                android:layout_width="280dp"
+                                android:layout_height="165dp">
 
-                                <LinearLayout
-                                    android:layout_width="270dp"
-                                    android:layout_height="165dp"
-                                    android:background="@color/divider">
+                                <ImageView
+                                    android:id="@+id/image"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scaleType="fitXY" />
+                            </LinearLayout>
 
-                                </LinearLayout>
-
-                            </android.support.v7.widget.CardView>
-
-
-                            <android.support.v7.widget.CardView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:elevation="5dp"
-                                card_view:cardBackgroundColor="@android:color/white"
-                                card_view:cardCornerRadius="15dp"
-                                card_view:cardElevation="2dp"
-                                card_view:cardUseCompatPadding="true">
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content">
-
-                                    <ImageView
-                                        android:id="@+id/image"
-                                        android:layout_width="270dp"
-                                        android:layout_height="165dp"
-                                        android:scaleType="centerCrop"/>
-                                </LinearLayout>
-
-                            </android.support.v7.widget.CardView>
-                        </RelativeLayout>
+                        </android.support.v7.widget.CardView>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -118,9 +92,9 @@
                     android:paddingLeft="30dp">
 
                     <TextView
+                        android:id="@+id/expDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/expDate"
                         android:textAllCaps="true"
                         android:textColor="@color/primary_text" />
 
@@ -162,13 +136,14 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:gravity="center"
                         android:padding="10dp">
 
                         <TextView
+                            android:id="@+id/name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/name"
                             android:textColor="@color/primary_text"
                             android:textSize="18sp" />
 

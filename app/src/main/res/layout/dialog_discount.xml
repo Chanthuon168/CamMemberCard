@@ -29,13 +29,13 @@
         android:padding="10dp">
 
         <com.hammersmith.cammembercard.RoundedImageView
+            android:id="@+id/image_card"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center_horizontal"
             android:background="@color/divider"
             android:elevation="5dp"
             android:padding="2dp"
-            android:src="@drawable/img_brown"
             app:border_width="0dip"
             app:is_oval="true"
             app:round_background="true" />
@@ -85,9 +85,9 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Brown Coffee Cambodia"
             android:textColor="@color/primary_text"
             android:textSize="20sp" />
 

@@ -44,7 +44,7 @@ public class DetailActivity extends AppCompatActivity {
             R.drawable.home,
             R.drawable.comment_processing
     };
-    private String strExpDate, strName, strImgCard;
+    private String strExpDate, strName, strImgCard, strLogo;
     private TextView expDate, name;
     private ImageView image;
     private int id;
@@ -61,6 +61,7 @@ public class DetailActivity extends AppCompatActivity {
             strExpDate = getIntent().getStringExtra("exp");
             strName = getIntent().getStringExtra("name");
             strImgCard = getIntent().getStringExtra("image_card");
+            strLogo = getIntent().getStringExtra("logo");
             expDate.setText("EXP. " + strExpDate);
             name.setText(strName);
             Uri uri = Uri.parse(ApiClient.BASE_URL + strImgCard);
@@ -147,10 +148,12 @@ public class DetailActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-        RoundedImageView image = (RoundedImageView) viewDialog.findViewById(R.id.image_card);
-        Uri uri = Uri.parse(ApiClient.BASE_URL+strImgCard);
+        ImageView image = (ImageView) viewDialog.findViewById(R.id.image_card);
+        TextView name = (TextView) viewDialog.findViewById(R.id.name);
+        Uri uri = Uri.parse(ApiClient.BASE_URL + strLogo);
         context = image.getContext();
         Picasso.with(context).load(uri).into(image);
+        name.setText(strName);
         List<Discount> discounts = new ArrayList<>();
         RecyclerView recyclerView = (RecyclerView) viewDialog.findViewById(R.id.recyclerView);
         AdapterDiscount adapterDiscount = new AdapterDiscount(DetailActivity.this, discounts);

@@ -47,6 +47,7 @@ public class AdapterAlbum extends RecyclerView.Adapter<AdapterAlbum.MyViewHolder
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity, ImageActivity.class);
+                intent.putExtra("position",position);
                 intent.putExtra("id", albums.get(position).getMemId());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 activity.startActivity(intent);

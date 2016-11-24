@@ -27,6 +27,7 @@ public class ImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image);
         mViewPager = (ViewPager) findViewById(R.id.myviewpager);
         id = getIntent().getIntExtra("id", 0);
+        position = getIntent().getIntExtra("position", 0);
         ApiInterface serviceAlbum = ApiClient.getClient().create(ApiInterface.class);
         Call<List<Album>> callAlbum = serviceAlbum.getAlbum(id);
         callAlbum.enqueue(new Callback<List<Album>>() {
@@ -35,6 +36,7 @@ public class ImageActivity extends AppCompatActivity {
                 albums = response.body();
                 mCustomPagerAdapter = new ViewPagerAdapter(ImageActivity.this, albums, position);
                 mViewPager.setAdapter(mCustomPagerAdapter);
+                mViewPager.setCurrentItem(position);
                 mCustomPagerAdapter.notifyDataSetChanged();
             }
 

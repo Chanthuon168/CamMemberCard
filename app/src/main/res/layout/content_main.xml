@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         app:tabGravity="fill"
+        app:tabIndicatorColor="@color/icons"
         app:tabMode="fixed"
         app:tabSelectedTextColor="@color/icons"
         app:tabTextAppearance="@style/MyTabLayoutTextAppearance"

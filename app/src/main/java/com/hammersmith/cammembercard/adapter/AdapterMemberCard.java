@@ -58,7 +58,7 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
                 intent.putExtra("exp", members.get(position).getExpDate());
                 intent.putExtra("name", members.get(position).getName());
                 intent.putExtra("image_card", members.get(position).getImgCard());
-
+                intent.putExtra("logo", members.get(position).getImgMerchandise());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 activity.startActivity(intent);
             }
@@ -77,15 +77,15 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        ImageView image, profile;
-        RoundedImageView imgCard;
+        ImageView image;
+        RoundedImageView profile, imgCard;
         TextView name, address;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             imgCard = (RoundedImageView) itemView.findViewById(R.id.imgCard);
             image = (ImageView) itemView.findViewById(R.id.image_card);
-            profile = (ImageView) itemView.findViewById(R.id.profile);
+            profile = (RoundedImageView) itemView.findViewById(R.id.profile);
             name = (TextView) itemView.findViewById(R.id.name);
             address = (TextView) itemView.findViewById(R.id.address);
         }

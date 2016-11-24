@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CamMemberCard</string>
+    <string name="app_name">MyCards</string>
     <string name="app_id">1817283938495674</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

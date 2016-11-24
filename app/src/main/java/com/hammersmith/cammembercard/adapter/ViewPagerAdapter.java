@@ -48,7 +48,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         Uri uri = Uri.parse(ApiClient.BASE_URL + images.get(ssPosition).getImage());
         ssContext = ssImageView.getContext();
         Picasso.with(ssContext).load(uri).into(ssImageView);
-        Log.d("image",images.get(ssPosition).getImage());
+        Log.d("image", images.get(ssPosition).getImage());
 
         ((ViewPager) ssContainer).addView(ssImageView, 0);
         return ssImageView;
