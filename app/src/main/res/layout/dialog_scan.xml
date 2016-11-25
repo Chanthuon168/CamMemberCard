@@ -60,7 +60,6 @@
                     android:background="@color/divider"
                     android:elevation="5dp"
                     android:padding="2dp"
-                    android:src="@drawable/img_brown"
                     app:border_width="0dip"
                     app:is_oval="true"
                     app:round_background="true" />
@@ -110,9 +109,9 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Brown Coffee Cambodia"
                     android:textColor="@color/primary_text"
                     android:textSize="20sp" />
 
@@ -126,7 +125,6 @@
                         android:id="@+id/number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="10"
                         android:textColor="@color/red"
                         android:textSize="30sp" />
 

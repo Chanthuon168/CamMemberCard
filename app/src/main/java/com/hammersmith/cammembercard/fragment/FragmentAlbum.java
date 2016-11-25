@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.hammersmith.cammembercard.ApiClient;
 import com.hammersmith.cammembercard.ApiInterface;
@@ -34,6 +35,7 @@ public class FragmentAlbum extends Fragment {
     private GridLayoutManager layoutManager;
     private int id;
     private ProgressDialog mProgressDialog;
+    private LinearLayout lProgress;
 
     public FragmentAlbum() {
 
@@ -44,6 +46,7 @@ public class FragmentAlbum extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_album, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        lProgress = (LinearLayout) view.findViewById(R.id.lProgress);
         DetailActivity activity = (DetailActivity) getActivity();
         id = activity.getMyData();
         layoutManager = new GridLayoutManager(getActivity(), 3);
@@ -60,6 +63,7 @@ public class FragmentAlbum extends Fragment {
                 recyclerView.setAdapter(adapterAlbum);
                 adapterAlbum.notifyDataSetChanged();
                 hideProgressDialog();
+                lProgress.setVisibility(View.GONE);
             }
 
             @Override

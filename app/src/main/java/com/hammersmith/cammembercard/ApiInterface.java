@@ -1,6 +1,7 @@
 package com.hammersmith.cammembercard;
 
 import com.hammersmith.cammembercard.model.Album;
+import com.hammersmith.cammembercard.model.Discount;
 import com.hammersmith.cammembercard.model.MemberCard;
 import com.hammersmith.cammembercard.model.User;
 
@@ -33,4 +34,7 @@ public interface ApiInterface {
 
     @GET("get/album/{id}")
     Call<List<Album>> getAlbum(@Path("id") int id);
+
+    @GET("get/discount/{id}")
+    Call<List<Discount>> getDiscount(@Path("id") int id);
 }

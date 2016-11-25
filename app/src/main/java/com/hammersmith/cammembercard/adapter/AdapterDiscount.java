@@ -1,7 +1,10 @@
 package com.hammersmith.cammembercard.adapter;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.media.Image;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,8 +14,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.hammersmith.cammembercard.ApiClient;
+import com.hammersmith.cammembercard.DetailActivity;
 import com.hammersmith.cammembercard.R;
 import com.hammersmith.cammembercard.model.Discount;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -22,10 +28,13 @@ import java.util.List;
 public class AdapterDiscount extends RecyclerView.Adapter<AdapterDiscount.MyViewHolder> {
     private Activity activity;
     private List<Discount> discounts;
+    private Context context;
+    private DetailActivity activityDetail;
 
     public AdapterDiscount(Activity activity, List<Discount> discounts) {
         this.activity = activity;
         this.discounts = discounts;
+        activityDetail = (DetailActivity) activity;
     }
 
     @Override
@@ -36,24 +45,28 @@ public class AdapterDiscount extends RecyclerView.Adapter<AdapterDiscount.MyView
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        if (position == 0) {
-            holder.layout.setClickable(true);
-            holder.number.setText("10");
-            holder.number.setTextColor(activity.getResources().getColor(R.color.red));
-            holder.symbol.setTextColor(activity.getResources().getColor(R.color.red));
-            holder.layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialogScan();
-                }
-            });
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+        if (discounts.size() != 0) {
+            if (position == 0) {
+                holder.layout.setClickable(true);
+                holder.number.setText(discounts.get(position).getDiscount());
+                holder.number.setTextColor(activity.getResources().getColor(R.color.red));
+                holder.symbol.setTextColor(activity.getResources().getColor(R.color.red));
+                holder.layout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        activityDetail.closeDialog();
+                        dialogScan(ApiClient.BASE_URL + discounts.get(position).getPhoto(), discounts.get(position).getName(), discounts.get(position).getDiscount());
+                    }
+                });
+            }
+            holder.number.setText(discounts.get(position).getDiscount());
         }
     }
 
     @Override
     public int getItemCount() {
-        return 9;
+        return discounts.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -68,7 +81,7 @@ public class AdapterDiscount extends RecyclerView.Adapter<AdapterDiscount.MyView
         }
     }
 
-    private void dialogScan() {
+    private void dialogScan(String strImage, String strName, String strDiscount) {
         LayoutInflater factory = LayoutInflater.from(activity);
         final View viewDialog = factory.inflate(R.layout.dialog_scan, null);
         final AlertDialog dialog = new AlertDialog.Builder(activity).create();
@@ -80,7 +93,14 @@ public class AdapterDiscount extends RecyclerView.Adapter<AdapterDiscount.MyView
             }
         });
         ImageView imgCode = (ImageView) viewDialog.findViewById(R.id.imgCode);
-
+        ImageView profile = (ImageView) viewDialog.findViewById(R.id.profile);
+        TextView name = (TextView) viewDialog.findViewById(R.id.name);
+        TextView discount = (TextView) viewDialog.findViewById(R.id.number);
+        Uri uri = Uri.parse(strImage);
+        context = profile.getContext();
+        Picasso.with(context).load(uri).into(profile);
+        name.setText(strName);
+        discount.setText(strDiscount);
         dialog.show();
     }
 }

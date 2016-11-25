@@ -8,6 +8,8 @@ import com.google.gson.annotations.SerializedName;
 public class MemberCard {
     @SerializedName("id")
     private int id;
+    @SerializedName("md_id")
+    private int merId;
     @SerializedName("img_card")
     private String ImgCard;
     @SerializedName("img_merchandise")
@@ -19,7 +21,16 @@ public class MemberCard {
     @SerializedName("exp")
     private String expDate;
 
-    public MemberCard(){}
+    public MemberCard() {
+    }
+
+    public int getMerId() {
+        return merId;
+    }
+
+    public void setMerId(int merId) {
+        this.merId = merId;
+    }
 
     public String getAddress() {
         return address;

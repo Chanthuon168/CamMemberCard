@@ -28,7 +28,7 @@ public class FragmentHome extends Fragment {
     private int[] tabIcons = {
             R.drawable.credit_card,
             R.drawable.credit_card_multiple,
-            R.drawable.gift
+            R.drawable.wallet_giftcard_white
     };
 
     public FragmentHome() {
@@ -57,7 +57,7 @@ public class FragmentHome extends Fragment {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new FragmentMemberCard(), "Member Card");
         adapter.addFragment(new FragmentCollection(), "Collection");
-        adapter.addFragment(new FragmentPrivilege(), "Member Privileges");
+        adapter.addFragment(new FragmentPrivilege(), "Most Used");
         viewPager.setAdapter(adapter);
     }
 

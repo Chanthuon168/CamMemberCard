@@ -31,6 +31,10 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static com.hammersmith.cammembercard.R.id.image_card;
 
 public class DetailActivity extends AppCompatActivity {
@@ -47,7 +51,9 @@ public class DetailActivity extends AppCompatActivity {
     private String strExpDate, strName, strImgCard, strLogo;
     private TextView expDate, name;
     private ImageView image;
-    private int id;
+    private int id, mdId;
+    private List<Discount> discounts = new ArrayList<>();
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,7 @@ public class DetailActivity extends AppCompatActivity {
         image = (ImageView) findViewById(R.id.image);
         if (getIntent() != null) {
             id = getIntent().getIntExtra("id", 0);
+            mdId = getIntent().getIntExtra("md_id", 0);
             strExpDate = getIntent().getStringExtra("exp");
             strName = getIntent().getStringExtra("name");
             strImgCard = getIntent().getStringExtra("image_card");
@@ -140,7 +147,7 @@ public class DetailActivity extends AppCompatActivity {
     private void dialogDiscount() {
         LayoutInflater factory = LayoutInflater.from(this);
         final View viewDialog = factory.inflate(R.layout.dialog_discount, null);
-        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog = new AlertDialog.Builder(this).create();
         dialog.setView(viewDialog);
         viewDialog.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,16 +161,33 @@ public class DetailActivity extends AppCompatActivity {
         context = image.getContext();
         Picasso.with(context).load(uri).into(image);
         name.setText(strName);
-        List<Discount> discounts = new ArrayList<>();
-        RecyclerView recyclerView = (RecyclerView) viewDialog.findViewById(R.id.recyclerView);
-        AdapterDiscount adapterDiscount = new AdapterDiscount(DetailActivity.this, discounts);
+        final RecyclerView recyclerView = (RecyclerView) viewDialog.findViewById(R.id.recyclerView);
         GridLayoutManager layoutManager = new GridLayoutManager(DetailActivity.this, 3);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapterDiscount);
+        ApiInterface serviceDiscount = ApiClient.getClient().create(ApiInterface.class);
+        Call<List<Discount>> callDiscount = serviceDiscount.getDiscount(mdId);
+        callDiscount.enqueue(new Callback<List<Discount>>() {
+            @Override
+            public void onResponse(Call<List<Discount>> call, Response<List<Discount>> response) {
+                discounts = response.body();
+                viewDialog.findViewById(R.id.lProgress).setVisibility(View.GONE);
+                AdapterDiscount adapterDiscount = new AdapterDiscount(DetailActivity.this, discounts);
+                recyclerView.setAdapter(adapterDiscount);
+                adapterDiscount.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<List<Discount>> call, Throwable t) {
+
+            }
+        });
         dialog.show();
     }
 
     public int getMyData() {
         return id;
+    }
+    public void closeDialog(){
+        dialog.dismiss();
     }
 }

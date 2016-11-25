@@ -55,6 +55,7 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
             public void onClick(View v) {
                 Intent intent = new Intent(activity, DetailActivity.class);
                 intent.putExtra("id", members.get(position).getId());
+                intent.putExtra("md_id", members.get(position).getMerId());
                 intent.putExtra("exp", members.get(position).getExpDate());
                 intent.putExtra("name", members.get(position).getName());
                 intent.putExtra("image_card", members.get(position).getImgCard());
