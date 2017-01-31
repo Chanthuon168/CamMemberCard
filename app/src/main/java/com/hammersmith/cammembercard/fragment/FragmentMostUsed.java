@@ -12,16 +12,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.hammersmith.cammembercard.ApiClient;
 import com.hammersmith.cammembercard.ApiInterface;
 import com.hammersmith.cammembercard.PrefUtils;
 import com.hammersmith.cammembercard.R;
 import com.hammersmith.cammembercard.adapter.AdapterCollection;
-import com.hammersmith.cammembercard.adapter.AdapterMemberCard;
+import com.hammersmith.cammembercard.adapter.AdapterMostUsed;
 import com.hammersmith.cammembercard.model.CollectionCard;
-import com.hammersmith.cammembercard.model.MemberCard;
+import com.hammersmith.cammembercard.model.MostUsed;
 import com.hammersmith.cammembercard.model.User;
 
 import java.util.ArrayList;
@@ -34,24 +33,20 @@ import retrofit2.Response;
 /**
  * Created by Chan Thuon on 11/23/2016.
  */
-public class FragmentCollection extends Fragment {
+public class FragmentMostUsed extends Fragment {
     private RecyclerView recyclerView;
-    private AdapterCollection adapterCollection;
+    private AdapterMostUsed adapterMostUsed;
     private LinearLayoutManager layoutManager;
-    private List<CollectionCard> collections = new ArrayList<>();
+    private List<MostUsed> cards = new ArrayList<>();
     private SwipeRefreshLayout swipeRefresh;
     private ProgressDialog mProgressDialog;
     private int sizeMembership;
     private User user;
-    private LinearLayout lNoFavorite;
-
-    public FragmentCollection() {
-    }
-
+    public FragmentMostUsed(){}
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_collection, container, false);
+        View view = inflater.inflate(R.layout.fragment_most_used, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -59,7 +54,6 @@ public class FragmentCollection extends Fragment {
 //        showProgressDialog();
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         swipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
-        lNoFavorite = (LinearLayout) view.findViewById(R.id.lNoFavorite);
         recyclerView.setNestedScrollingEnabled(false);
         swipeRefresh.setRefreshing(true);
         swipeRefresh.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN, Color.CYAN);
@@ -75,28 +69,26 @@ public class FragmentCollection extends Fragment {
         });
 
         ApiInterface serviceMembership = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<CollectionCard>> callMember = serviceMembership.getCollectionCard(user.getSocialLink());
-        callMember.enqueue(new Callback<List<CollectionCard>>() {
+        Call<List<MostUsed>> callMember = serviceMembership.getMostUsedCard(user.getSocialLink());
+        callMember.enqueue(new Callback<List<MostUsed>>() {
             @Override
-            public void onResponse(Call<List<CollectionCard>> call, Response<List<CollectionCard>> response) {
-                collections = response.body();
-                Log.d("collection", collections.toArray().toString());
+            public void onResponse(Call<List<MostUsed>> call, Response<List<MostUsed>> response) {
+                cards = response.body();
+                Log.d("collection", cards.toArray().toString());
                 swipeRefresh.setRefreshing(false);
-                if (collections.get(0).getSizeStats().equals("invalid")) {
+                if (cards.get(0).getSizeStats().equals("invalid")) {
                     recyclerView.setVisibility(View.GONE);
-                    lNoFavorite.setVisibility(View.VISIBLE);
                 } else {
-                    lNoFavorite.setVisibility(View.GONE);
-                    sizeMembership = collections.size();
-                    adapterCollection = new AdapterCollection(getActivity(), collections);
-                    recyclerView.setAdapter(adapterCollection);
-                    adapterCollection.notifyDataSetChanged();
+                    sizeMembership = cards.size();
+                    adapterMostUsed = new AdapterMostUsed(getActivity(), cards);
+                    recyclerView.setAdapter(adapterMostUsed);
+                    adapterMostUsed.notifyDataSetChanged();
                 }
                 hideProgressDialog();
             }
 
             @Override
-            public void onFailure(Call<List<CollectionCard>> call, Throwable t) {
+            public void onFailure(Call<List<MostUsed>> call, Throwable t) {
 
             }
         });
@@ -107,32 +99,30 @@ public class FragmentCollection extends Fragment {
 
     private void refreshData() {
         ApiInterface serviceMembership = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<CollectionCard>> callMember = serviceMembership.getCollectionCard(user.getSocialLink());
-        callMember.enqueue(new Callback<List<CollectionCard>>() {
+        Call<List<MostUsed>> callMember = serviceMembership.getMostUsedCard(user.getSocialLink());
+        callMember.enqueue(new Callback<List<MostUsed>>() {
             @Override
-            public void onResponse(Call<List<CollectionCard>> call, Response<List<CollectionCard>> response) {
-                collections = response.body();
-                Log.d("collection", collections.toArray().toString());
+            public void onResponse(Call<List<MostUsed>> call, Response<List<MostUsed>> response) {
+                cards = response.body();
+                Log.d("collection", cards.toArray().toString());
                 hideProgressDialog();
                 swipeRefresh.setRefreshing(false);
-                if (collections.get(0).getSizeStats().equals("invalid")) {
+                if (cards.get(0).getSizeStats().equals("invalid")) {
                     recyclerView.setVisibility(View.GONE);
-                    lNoFavorite.setVisibility(View.VISIBLE);
                 } else {
-                    lNoFavorite.setVisibility(View.GONE);
-                    if (sizeMembership != collections.size()) {
+                    if (sizeMembership != cards.size()) {
                         recyclerView.setVisibility(View.VISIBLE);
-                        adapterCollection = new AdapterCollection(getActivity(), collections);
-                        recyclerView.setAdapter(adapterCollection);
-                        adapterCollection.notifyDataSetChanged();
-                        sizeMembership = collections.size();
-                        adapterCollection.notifyDataSetChanged();
+                        adapterMostUsed = new AdapterMostUsed(getActivity(), cards);
+                        recyclerView.setAdapter(adapterMostUsed);
+                        adapterMostUsed.notifyDataSetChanged();
+                        sizeMembership = cards.size();
+                        adapterMostUsed.notifyDataSetChanged();
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<List<CollectionCard>> call, Throwable t) {
+            public void onFailure(Call<List<MostUsed>> call, Throwable t) {
 
             }
         });

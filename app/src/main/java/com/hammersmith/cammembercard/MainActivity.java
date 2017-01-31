@@ -94,10 +94,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
+        if (id == R.id.member_card) {
+            startActivity(new Intent(MainActivity.this, MemberCardActivity.class));
+        } else if (id == R.id.collection) {
+            startActivity(new Intent(MainActivity.this, CollectionActivity.class));
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {

@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,7 +25,9 @@ import com.hammersmith.cammembercard.fragment.FragmentCondition;
 import com.hammersmith.cammembercard.fragment.FragmentMemberCard;
 import com.hammersmith.cammembercard.fragment.FragmentOutlet;
 import com.hammersmith.cammembercard.fragment.FragmentReview;
+import com.hammersmith.cammembercard.model.CollectionCard;
 import com.hammersmith.cammembercard.model.Discount;
+import com.hammersmith.cammembercard.model.User;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
 
@@ -48,12 +51,16 @@ public class DetailActivity extends AppCompatActivity {
             R.drawable.home,
             R.drawable.comment_processing
     };
-    private String strExpDate, strName, strImgCard, strLogo;
+    private String strExpDate, strName, strImgCard, strLogo, strStatus;
     private TextView expDate, name;
     private ImageView image;
     private int id, mdId;
     private List<Discount> discounts = new ArrayList<>();
     private AlertDialog dialog;
+    private CollectionCard card;
+    private User user;
+    private String strDiscount;
+    private Discount discount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +69,16 @@ public class DetailActivity extends AppCompatActivity {
         expDate = (TextView) findViewById(R.id.expDate);
         name = (TextView) findViewById(R.id.name);
         image = (ImageView) findViewById(R.id.image);
+        user = PrefUtils.getCurrentUser(getApplicationContext());
         if (getIntent() != null) {
             id = getIntent().getIntExtra("id", 0);
             mdId = getIntent().getIntExtra("md_id", 0);
+            Log.d("md_id",mdId+"");
             strExpDate = getIntent().getStringExtra("exp");
             strName = getIntent().getStringExtra("name");
             strImgCard = getIntent().getStringExtra("image_card");
             strLogo = getIntent().getStringExtra("logo");
+            strStatus = getIntent().getStringExtra("status");
             expDate.setText("EXP. " + strExpDate);
             name.setText(strName);
             Uri uri = Uri.parse(ApiClient.BASE_URL + strImgCard);
@@ -76,11 +86,38 @@ public class DetailActivity extends AppCompatActivity {
             Picasso.with(context).load(uri).into(image);
         }
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        if (strStatus.equals("checked")){
+            fab.setImageResource(R.drawable.img_gift);
+            dialogDiscount();
+        } else {
+            fab.setImageResource(R.drawable.member_card);
+        }
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogDiscount();
-                fab.setImageDrawable(getResources().getDrawable(R.drawable.img_gift));
+                if (strStatus.equals("checked")){
+                    fab.setImageResource(R.drawable.img_gift);
+                    dialogDiscount();
+                } else {
+                    card = new CollectionCard(user.getSocialLink(), id);
+                    ApiInterface serviceAddCard = ApiClient.getClient().create(ApiInterface.class);
+                    Call<CollectionCard> callCreate = serviceAddCard.addCard(card);
+                    callCreate.enqueue(new Callback<CollectionCard>() {
+                        @Override
+                        public void onResponse(Call<CollectionCard> call, Response<CollectionCard> response) {
+                            card = response.body();
+                            if (card.getStatus().equals("checked")) {
+                                fab.setImageResource(R.drawable.img_gift);
+                                dialogDiscount();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<CollectionCard> call, Throwable t) {
+
+                        }
+                    });
+                }
             }
         });
         findViewById(R.id.arrow_back).setOnClickListener(new View.OnClickListener() {
@@ -95,7 +132,7 @@ public class DetailActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
-        dialogDiscount();
+
     }
 
     private void setupTabIcons() {
@@ -182,6 +219,14 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
         dialog.show();
+    }
+
+    public int getMdId() {
+        return mdId;
+    }
+
+    public String getNameMerchandise() {
+        return strName;
     }
 
     public int getMyData() {

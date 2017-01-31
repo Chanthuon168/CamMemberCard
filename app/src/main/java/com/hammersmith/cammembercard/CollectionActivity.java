@@ -1,27 +1,19 @@
-package com.hammersmith.cammembercard.fragment;
+package com.hammersmith.cammembercard;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.hammersmith.cammembercard.ApiClient;
-import com.hammersmith.cammembercard.ApiInterface;
-import com.hammersmith.cammembercard.PrefUtils;
-import com.hammersmith.cammembercard.R;
 import com.hammersmith.cammembercard.adapter.AdapterCollection;
-import com.hammersmith.cammembercard.adapter.AdapterMemberCard;
 import com.hammersmith.cammembercard.model.CollectionCard;
-import com.hammersmith.cammembercard.model.MemberCard;
 import com.hammersmith.cammembercard.model.User;
 
 import java.util.ArrayList;
@@ -31,10 +23,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by Chan Thuon on 11/23/2016.
- */
-public class FragmentCollection extends Fragment {
+public class CollectionActivity extends AppCompatActivity {
+    private Toolbar toolbar;
     private RecyclerView recyclerView;
     private AdapterCollection adapterCollection;
     private LinearLayoutManager layoutManager;
@@ -45,35 +35,37 @@ public class FragmentCollection extends Fragment {
     private User user;
     private LinearLayout lNoFavorite;
 
-    public FragmentCollection() {
-    }
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_collection, container, false);
-
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        layoutManager = new LinearLayoutManager(getActivity());
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_collection);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Collection");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+        layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-//        showProgressDialog();
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        swipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
-        lNoFavorite = (LinearLayout) view.findViewById(R.id.lNoFavorite);
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+        swipeRefresh = (SwipeRefreshLayout)findViewById(R.id.swiperefresh);
+        lNoFavorite = (LinearLayout)findViewById(R.id.lNoFavorite);
         recyclerView.setNestedScrollingEnabled(false);
         swipeRefresh.setRefreshing(true);
         swipeRefresh.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN, Color.CYAN);
-
-        user = PrefUtils.getCurrentUser(getActivity());
-        Log.d("userId", user.getSocialLink());
-
+        user = PrefUtils.getCurrentUser(this);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshData();
             }
         });
-
         ApiInterface serviceMembership = ApiClient.getClient().create(ApiInterface.class);
         Call<List<CollectionCard>> callMember = serviceMembership.getCollectionCard(user.getSocialLink());
         callMember.enqueue(new Callback<List<CollectionCard>>() {
@@ -88,11 +80,10 @@ public class FragmentCollection extends Fragment {
                 } else {
                     lNoFavorite.setVisibility(View.GONE);
                     sizeMembership = collections.size();
-                    adapterCollection = new AdapterCollection(getActivity(), collections);
+                    adapterCollection = new AdapterCollection(CollectionActivity.this, collections);
                     recyclerView.setAdapter(adapterCollection);
                     adapterCollection.notifyDataSetChanged();
                 }
-                hideProgressDialog();
             }
 
             @Override
@@ -101,10 +92,7 @@ public class FragmentCollection extends Fragment {
             }
         });
 
-
-        return view;
     }
-
     private void refreshData() {
         ApiInterface serviceMembership = ApiClient.getClient().create(ApiInterface.class);
         Call<List<CollectionCard>> callMember = serviceMembership.getCollectionCard(user.getSocialLink());
@@ -113,7 +101,6 @@ public class FragmentCollection extends Fragment {
             public void onResponse(Call<List<CollectionCard>> call, Response<List<CollectionCard>> response) {
                 collections = response.body();
                 Log.d("collection", collections.toArray().toString());
-                hideProgressDialog();
                 swipeRefresh.setRefreshing(false);
                 if (collections.get(0).getSizeStats().equals("invalid")) {
                     recyclerView.setVisibility(View.GONE);
@@ -122,7 +109,7 @@ public class FragmentCollection extends Fragment {
                     lNoFavorite.setVisibility(View.GONE);
                     if (sizeMembership != collections.size()) {
                         recyclerView.setVisibility(View.VISIBLE);
-                        adapterCollection = new AdapterCollection(getActivity(), collections);
+                        adapterCollection = new AdapterCollection(CollectionActivity.this, collections);
                         recyclerView.setAdapter(adapterCollection);
                         adapterCollection.notifyDataSetChanged();
                         sizeMembership = collections.size();
@@ -136,27 +123,5 @@ public class FragmentCollection extends Fragment {
 
             }
         });
-    }
-
-    private void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.setMessage("Loading...");
-            mProgressDialog.setIndeterminate(true);
-        }
-
-        mProgressDialog.show();
-    }
-
-    private void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.hide();
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        hideProgressDialog();
     }
 }

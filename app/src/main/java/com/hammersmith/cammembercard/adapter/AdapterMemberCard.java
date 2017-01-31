@@ -12,13 +12,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hammersmith.cammembercard.ApiClient;
+import com.hammersmith.cammembercard.ApiInterface;
 import com.hammersmith.cammembercard.DetailActivity;
+import com.hammersmith.cammembercard.PrefUtils;
 import com.hammersmith.cammembercard.R;
 import com.hammersmith.cammembercard.RoundedImageView;
 import com.hammersmith.cammembercard.model.MemberCard;
+import com.hammersmith.cammembercard.model.CollectionCard;
+import com.hammersmith.cammembercard.model.User;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Chan Thuon on 11/2/2016.
@@ -27,10 +35,13 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
     private Activity activity;
     private List<MemberCard> members;
     private Context context;
+    private CollectionCard card;
+    private User user;
 
     public AdapterMemberCard(Activity activity, List<MemberCard> members) {
         this.activity = activity;
         this.members = members;
+        user = PrefUtils.getCurrentUser(activity);
     }
 
     @Override
@@ -60,14 +71,44 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
                 intent.putExtra("name", members.get(position).getName());
                 intent.putExtra("image_card", members.get(position).getImgCard());
                 intent.putExtra("logo", members.get(position).getImgMerchandise());
+                intent.putExtra("status", members.get(position).getStatus());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 activity.startActivity(intent);
             }
         });
+
+        holder.numUser.setText(members.get(position).getCount());
+        if (members.get(position).getStatus().equals("checked")) {
+            holder.imgCard.setImageResource(R.drawable.new_gift);
+        } else {
+            holder.imgCard.setImageResource(R.drawable.new_card);
+        }
+
         holder.imgCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.imgCard.setImageDrawable(activity.getResources().getDrawable(R.drawable.new_gift));
+                card = new CollectionCard(user.getSocialLink(), members.get(position).getId());
+                ApiInterface serviceAddCard = ApiClient.getClient().create(ApiInterface.class);
+                Call<CollectionCard> callCreate = serviceAddCard.addCard(card);
+                callCreate.enqueue(new Callback<CollectionCard>() {
+                    @Override
+                    public void onResponse(Call<CollectionCard> call, Response<CollectionCard> response) {
+                        card = response.body();
+                        if (card.getStatus().equals("checked")) {
+                            holder.imgCard.setImageResource(R.drawable.new_gift);
+                        }
+                        if (card.getCount().equals("0")) {
+                            holder.numUser.setText("");
+                        } else {
+                            holder.numUser.setText(card.getCount());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CollectionCard> call, Throwable t) {
+
+                    }
+                });
             }
         });
     }
@@ -80,7 +121,7 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
         RoundedImageView profile, imgCard;
-        TextView name, address;
+        TextView name, address, numUser;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -89,6 +130,7 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
             profile = (RoundedImageView) itemView.findViewById(R.id.profile);
             name = (TextView) itemView.findViewById(R.id.name);
             address = (TextView) itemView.findViewById(R.id.address);
+            numUser = (TextView) itemView.findViewById(R.id.numUser);
         }
     }
 }

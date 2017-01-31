@@ -3,11 +3,13 @@ package com.hammersmith.cammembercard.model;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Chan Thuon on 11/22/2016.
+ * Created by imac on 25/1/17.
  */
-public class MemberCard {
+public class MostUsed {
     @SerializedName("id")
     private int id;
+    @SerializedName("card_id")
+    private int cardId;
     @SerializedName("md_id")
     private int merId;
     @SerializedName("img_card")
@@ -29,11 +31,21 @@ public class MemberCard {
     @SerializedName("size_status")
     private String sizeStats;
 
-    public MemberCard() {
+
+    public int getId() {
+        return id;
     }
 
-    public MemberCard(String socialLink) {
-        this.socialLink = socialLink;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(int cardId) {
+        this.cardId = cardId;
     }
 
     public int getMerId() {
@@ -44,20 +56,12 @@ public class MemberCard {
         this.merId = merId;
     }
 
-    public String getAddress() {
-        return address;
+    public String getImgCard() {
+        return ImgCard;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setImgCard(String imgCard) {
+        ImgCard = imgCard;
     }
 
     public String getImgMerchandise() {
@@ -68,20 +72,20 @@ public class MemberCard {
         this.imgMerchandise = imgMerchandise;
     }
 
-    public String getImgCard() {
-        return ImgCard;
+    public String getName() {
+        return name;
     }
 
-    public void setImgCard(String imgCard) {
-        ImgCard = imgCard;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public int getId() {
-        return id;
+    public String getAddress() {
+        return address;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getExpDate() {

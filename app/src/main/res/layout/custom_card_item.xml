@@ -242,10 +242,10 @@
                             android:textSize="13sp" />
 
                         <TextView
+                            android:id="@+id/numUser"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="3dp"
-                            android:text="1.2k"
                             android:textColor="@color/colorPrimary"
                             android:textSize="13sp" />
 
