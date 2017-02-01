@@ -11,7 +11,7 @@
             android:icon="@drawable/credit_card_multiple"
             android:title="Collection" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/most_used"
             android:icon="@drawable/wallet_giftcard_white"
             android:title="Most Used" />
         <item

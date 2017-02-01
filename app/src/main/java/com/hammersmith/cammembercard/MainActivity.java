@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.facebook.FacebookSdk;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.hammersmith.cammembercard.fragment.FragmentHome;
 import com.hammersmith.cammembercard.model.User;
@@ -57,6 +58,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         name = (TextView) mHeaderView.findViewById(R.id.name);
         email = (TextView) mHeaderView.findViewById(R.id.email);
         profile = (RoundedImageView) mHeaderView.findViewById(R.id.profile);
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            }
+        });
         userSocial = new User(user.getSocialLink());
         ApiInterface serviceUser = ApiClient.getClient().create(ApiInterface.class);
         Call<User> callUser = serviceUser.getUser(userSocial);
@@ -98,10 +105,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(MainActivity.this, MemberCardActivity.class));
         } else if (id == R.id.collection) {
             startActivity(new Intent(MainActivity.this, CollectionActivity.class));
-        } else if (id == R.id.nav_slideshow) {
-
+        } else if (id == R.id.most_used) {
+            startActivity(new Intent(MainActivity.this, MostUsedActivity.class));
         } else if (id == R.id.nav_manage) {
 
+        } else if (id == R.id.nav_account) {
+            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         } else if (id == R.id.nav_logout) {
             FacebookSdk.sdkInitialize(getApplicationContext());
             PrefUtils.clearCurrentUser(MainActivity.this);
