@@ -1,20 +1,32 @@
 package com.hammersmith.cammembercard;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.hammersmith.cammembercard.model.User;
 import com.squareup.picasso.Picasso;
 
-public class ProfileActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class ProfileActivity extends AppCompatActivity implements View.OnClickListener{
     private Toolbar toolbar;
-    private RoundedImageView profile;
-    private User user;
+    private RoundedImageView profile, camera;
+    private User user, userSocial;
     private Context context;
+    private TextView name, email, memId, gender, dateOfBirth, contact, address, country;
+    private SwipeRefreshLayout swipeRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +35,20 @@ public class ProfileActivity extends AppCompatActivity {
         user = PrefUtils.getCurrentUser(getApplicationContext());
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         profile = (RoundedImageView) findViewById(R.id.profile);
+        name = (TextView) findViewById(R.id.name);
+        email = (TextView) findViewById(R.id.email);
+        memId = (TextView) findViewById(R.id.memId);
+        gender = (TextView) findViewById(R.id.gender);
+        dateOfBirth = (TextView) findViewById(R.id.dob);
+        contact = (TextView) findViewById(R.id.contact);
+        address = (TextView) findViewById(R.id.address);
+        country = (TextView) findViewById(R.id.country);
+        camera = (RoundedImageView) findViewById(R.id.camera);
+
+        swipeRefresh = (SwipeRefreshLayout)findViewById(R.id.swiperefresh);
+        swipeRefresh.setRefreshing(true);
+        swipeRefresh.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN, Color.CYAN);
+        findViewById(R.id.lEdit).setOnClickListener(this);
         toolbar.setTitle("Profile");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -33,8 +59,62 @@ public class ProfileActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        Uri uri = Uri.parse(user.getPhoto());
-        context = profile.getContext();
-        Picasso.with(context).load(uri).into(profile);
+        userSocial = new User(user.getSocialLink());
+        ApiInterface serviceUser = ApiClient.getClient().create(ApiInterface.class);
+        Call<User> callUser = serviceUser.getUser(userSocial);
+        callUser.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                swipeRefresh.setRefreshing(false);
+                swipeRefresh.setEnabled(false);
+                camera.setVisibility(View.VISIBLE);
+                user = response.body();
+                name.setText(user.getName());
+                email.setText(user.getEmail());
+                Uri uri = Uri.parse(user.getPhoto());
+                context = profile.getContext();
+                Picasso.with(context).load(uri).into(profile);
+                if (user.getMemId() != null){
+                    memId.setText(user.getMemId());
+                }
+                if (user.getGender() != null) {
+                    gender.setText(user.getGender());
+                }else{
+                    gender.setText("None");
+                }
+                if (user.getDateOfBirth() != null){
+                    dateOfBirth.setText(user.getDateOfBirth());
+                }else {
+                    dateOfBirth.setText("None");
+                }
+                if (user.getContact() != null){
+                    contact.setText(user.getContact());
+                }else{
+                    contact.setText("None");
+                }
+                if (user.getAddress() != null){
+                    address.setText(user.getAddress());
+                }else{
+                    address.setText("None");
+                }
+                if (user.getCountry() != null){
+                    country.setText(user.getCountry());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.lEdit:
+                    startActivity(new Intent(ProfileActivity.this, UpdateProfileActivity.class));
+                break;
+        }
     }
 }

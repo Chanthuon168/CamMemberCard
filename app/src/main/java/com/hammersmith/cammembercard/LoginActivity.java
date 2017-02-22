@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +46,6 @@ import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.Signature;
 import java.util.Arrays;
 
 import retrofit2.Call;
@@ -62,6 +62,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private User user, userPref;
     private String strEmail, strPassword;
     private EditText email, password;
+    private LinearLayout lUser, lMerchandise;
+    private String strLoginAs = "isUser";
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -99,13 +101,25 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         findViewById(R.id.l_login).setOnClickListener(this);
         email = (EditText) findViewById(R.id.input_email);
         password = (EditText) findViewById(R.id.input_password);
+        lUser = (LinearLayout) findViewById(R.id.lUser);
+        lMerchandise = (LinearLayout) findViewById(R.id.lMerchandise);
+        lUser.setOnClickListener(this);
+        lMerchandise.setOnClickListener(this);
+
         buildGoogleApiClient(null);
 
         if (PrefUtils.getCurrentUser(LoginActivity.this) != null) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-            finish();
+            user = PrefUtils.getCurrentUser(LoginActivity.this);
+            if (user.getLoginAs().equals("isMerchandise")) {
+                Intent intentMer = new Intent(LoginActivity.this, MainMerchandiseActivity.class);
+                intentMer.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intentMer);
+            } else {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+                finish();
+            }
         }
 
         Intent intent = getIntent();
@@ -165,8 +179,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         message.setText(strMessage);
         TextView cancel = (TextView) viewDialog.findViewById(R.id.cancel);
         TextView ok = (TextView) viewDialog.findViewById(R.id.ok);
-        IconTextView icon = (IconTextView) viewDialog.findViewById(R.id.icon);
-        icon.setText("{fa-times-circle}");
         if (strMessage.equals("Email or password is incorrect")) {
             cancel.setText("Try Again");
             ok.setVisibility(View.GONE);
@@ -201,8 +213,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         dialog.setView(viewDialog);
         TextView message = (TextView) viewDialog.findViewById(R.id.message);
         message.setText(strMessage);
-        IconTextView icon = (IconTextView) viewDialog.findViewById(R.id.icon);
-        icon.setText("{fa-times-circle}");
         TextView activate = (TextView) viewDialog.findViewById(R.id.ok);
         activate.setText("Activate");
         activate.setOnClickListener(new View.OnClickListener() {
@@ -272,6 +282,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             user.setEmail(emailGoogle);
             user.setSocialLink(linkGoogle);
             user.setPhoto(profileGoogle);
+            user.setLoginAs("isUser");
             PrefUtils.setCurrentUser(user, LoginActivity.this);
             saveUserSocial(nameGoogle, emailGoogle, profileGoogle, linkGoogle, "gg");
             signOut();
@@ -317,6 +328,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         user.setEmail(emailFb);
                         user.setSocialLink(linkFb);
                         user.setPhoto(photo);
+                        user.setLoginAs("isUser");
                         PrefUtils.setCurrentUser(user, LoginActivity.this);
                         saveUserSocial(nameFb, emailFb, photo, linkFb, "fb");
                     } catch (JSONException e) {
@@ -382,14 +394,20 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             case R.id.l_login:
                 strEmail = email.getText().toString();
                 strPassword = password.getText().toString();
-                loginByEmail(strEmail, strPassword);
+                loginByEmail(strLoginAs, strEmail, strPassword);
+                break;
+            case R.id.lUser:
+                updateLayout(true);
+                break;
+            case R.id.lMerchandise:
+                updateLayout(false);
                 break;
         }
     }
 
-    private void loginByEmail(String email, String password) {
+    private void loginByEmail(String loginAs, String email, String password) {
         showProgressDialog();
-        user = new User(email, password);
+        user = new User(loginAs, email, password);
         ApiInterface serviceLoginByEmail = ApiClient.getClient().create(ApiInterface.class);
         Call<User> callLoginByEmail = serviceLoginByEmail.userLoginByEmail(user);
         callLoginByEmail.enqueue(new Callback<User>() {
@@ -402,11 +420,18 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     userPref.setEmail(user.getEmail());
                     userPref.setSocialLink(user.getSocialLink());
                     userPref.setPhoto(user.getPhoto());
+                    userPref.setLoginAs(user.getLoginAs());
                     PrefUtils.setCurrentUser(userPref, LoginActivity.this);
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    startActivity(intent);
-                    finish();
+                    if (user.getLoginAs().equals("isMerchandise")) {
+                        Intent intent = new Intent(LoginActivity.this, MainMerchandiseActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        startActivity(intent);
+                        finish();
+                    }
                 } else if (user.getMsg().equals("Account haven't verify yet")) {
                     dialogActivate("Account haven't verify yet");
                 } else {
@@ -492,4 +517,17 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.disconnect();
     }
+
+    private void updateLayout(Boolean layout) {
+        if (layout) {
+            lUser.setBackgroundResource(R.drawable.bg_normal_user);
+            lMerchandise.setBackgroundResource(R.color.transparent);
+            strLoginAs = "isUser";
+        } else {
+            lMerchandise.setBackgroundResource(R.drawable.bg_merchandise);
+            lUser.setBackgroundResource(R.color.transparent);
+            strLoginAs = "isMerchandise";
+        }
+    }
+
 }

@@ -8,6 +8,10 @@ import com.google.gson.annotations.SerializedName;
 public class User {
     @SerializedName("id")
     private int id;
+    @SerializedName("mem_id")
+    private String memId;
+    @SerializedName("loginAs")
+    private String loginAs;
     @SerializedName("name")
     private String name;
     @SerializedName("email")
@@ -22,12 +26,16 @@ public class User {
     private String msg;
     @SerializedName("password")
     private String password;
+    @SerializedName("country")
+    private String country;
+    @SerializedName("gender")
+    private String gender;
+    @SerializedName("date_of_birth")
+    private String dateOfBirth;
     @SerializedName("address")
     private String address;
-    @SerializedName("phone")
-    private String phone;
-    @SerializedName("phone2")
-    private String phone2;
+    @SerializedName("contact")
+    private String contact;
 
     public User() {
     }
@@ -51,18 +59,18 @@ public class User {
         this.photo = photo;
     }
 
-    public User(String email, String password) {
+    public User(String loginAs, String email, String password) {
+        this.loginAs = loginAs;
         this.email = email;
         this.password = password;
     }
 
-    public User(String socialLink, String name, String email, String address, String phone, String phone2, String photo) {
+    public User(String socialLink, String name, String email, String address, String contact, String photo) {
         this.socialLink = socialLink;
         this.name = name;
         this.email = email;
         this.address = address;
-        this.phone = phone;
-        this.phone2 = phone2;
+        this.contact = contact;
         this.photo = photo;
     }
 
@@ -139,18 +147,58 @@ public class User {
     }
 
     public String getPhone() {
-        return phone;
+        return contact;
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
+        this.contact = phone;
     }
 
-    public String getPhone2() {
-        return phone2;
+    public String getCountry() {
+        return country;
     }
 
-    public void setPhone2(String phone2) {
-        this.phone2 = phone2;
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getMemId() {
+        return memId;
+    }
+
+    public void setMemId(String memId) {
+        this.memId = memId;
+    }
+
+    public String getLoginAs() {
+        return loginAs;
+    }
+
+    public void setLoginAs(String loginAs) {
+        this.loginAs = loginAs;
     }
 }

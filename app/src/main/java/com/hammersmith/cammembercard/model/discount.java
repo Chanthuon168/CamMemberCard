@@ -8,12 +8,16 @@ import com.google.gson.annotations.SerializedName;
 public class Discount {
     @SerializedName("id")
     private int id;
+    @SerializedName("mer_id")
+    private int merId;
     @SerializedName("discount")
     private String discount;
     @SerializedName("name")
     private String name;
     @SerializedName("photo")
     private String photo;
+    @SerializedName("status")
+    private String status;
 
     public Discount() {
     }
@@ -48,5 +52,21 @@ public class Discount {
 
     public void setDiscount(String discount) {
         this.discount = discount;
+    }
+
+    public int getMerId() {
+        return merId;
+    }
+
+    public void setMerId(int merId) {
+        this.merId = merId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

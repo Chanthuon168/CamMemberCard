@@ -56,7 +56,6 @@ public class AdapterOutlet extends RecyclerView.Adapter<AdapterOutlet.MyViewHold
                 dialog.dismiss();
             }
         });
-        ImageView imgCode = (ImageView) viewDialog.findViewById(R.id.imgCode);
 
         dialog.show();
     }

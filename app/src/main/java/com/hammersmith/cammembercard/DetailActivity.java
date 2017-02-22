@@ -202,7 +202,7 @@ public class DetailActivity extends AppCompatActivity {
         GridLayoutManager layoutManager = new GridLayoutManager(DetailActivity.this, 3);
         recyclerView.setLayoutManager(layoutManager);
         ApiInterface serviceDiscount = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<Discount>> callDiscount = serviceDiscount.getDiscount(mdId);
+        Call<List<Discount>> callDiscount = serviceDiscount.getDiscount(mdId,user.getSocialLink());
         callDiscount.enqueue(new Callback<List<Discount>>() {
             @Override
             public void onResponse(Call<List<Discount>> call, Response<List<Discount>> response) {

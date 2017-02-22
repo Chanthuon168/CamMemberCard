@@ -25,42 +25,49 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:id="@+id/lNoFavorite"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <com.joanzapata.iconify.widget.IconTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="{fa-credit-card}"
-                    android:textSize="35sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="There are no cards"
-                    android:textSize="16sp" />
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
-            </LinearLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            </android.support.v7.widget.RecyclerView>
+                <LinearLayout
+                    android:id="@+id/lNoFavorite"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-        </RelativeLayout>
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="{fa-credit-card}"
+                        android:textSize="35sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="There are no cards"
+                        android:textSize="16sp" />
+
+
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </RelativeLayout>
+        </android.support.v4.widget.NestedScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/scan"
+            android:icon="@drawable/qrcode_scan_merchandise"
+            android:title="Scan QR Code" />
+        <item
+            android:id="@+id/people_using"
+            android:icon="@drawable/account_multiple_merchandise_menu"
+            android:title="People Using" />
+        <item
+            android:id="@+id/most_scan"
+            android:icon="@drawable/account_box_menu"
+            android:title="Most Scan" />
+        <item
+            android:id="@+id/today_scan"
+            android:icon="@drawable/account_card_details_menu"
+            android:title="Today Scan" />
+        <item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/file_document_box"
+            android:title="Terms and Use" />
+        <item
+            android:icon="@drawable/shield_outline"
+            android:title="Privacy and Policy" />
+        <item
+            android:icon="@drawable/lightbulb_outline"
+            android:title="User Guide" />
+        <item
+            android:icon="@drawable/flag_outline_variant"
+            android:title="About Us" />
+    </group>
+
+    <item android:title="My account">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_account"
+                    android:icon="@drawable/account"
+                    android:title="Profile" />
+                <item
+                    android:id="@+id/update_account"
+                    android:icon="@drawable/account_settings_variant"
+                    android:title="Update Account" />
+                <item
+                    android:id="@+id/nav_logout"
+                    android:icon="@drawable/logout"
+                    android:title="Log out" />
+            </group>
+        </menu>
+    </item>
+
+</menu>

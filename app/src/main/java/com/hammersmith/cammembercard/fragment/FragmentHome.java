@@ -26,8 +26,8 @@ public class FragmentHome extends Fragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private int[] tabIcons = {
-            R.drawable.credit_card,
-            R.drawable.credit_card_multiple,
+            R.drawable.credit_card_white,
+            R.drawable.credit_card_multiple_white,
             R.drawable.wallet_giftcard_white
     };
 

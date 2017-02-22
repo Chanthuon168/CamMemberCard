@@ -19,6 +19,7 @@
         android:background="@color/icons"
         android:elevation="5dp"
         android:padding="2dp"
+        android:scaleType="centerCrop"
         app:border_width="0dip"
         app:is_oval="true"
         app:round_background="true" />
@@ -33,7 +34,6 @@
     <TextView
         android:id="@+id/email"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="android.studio@android.com" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

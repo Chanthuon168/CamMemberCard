@@ -1,12 +1,18 @@
 package com.hammersmith.cammembercard;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,13 +21,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.hammersmith.cammembercard.fragment.FragmentHome;
 import com.hammersmith.cammembercard.model.User;
+import com.joanzapata.iconify.widget.IconButton;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
 
@@ -37,6 +47,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private RoundedImageView profile;
     private Context context = MainActivity.this;
 
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         initScreen();
+
+        verifyStoragePermissions(MainActivity.this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -91,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            dialogExit("Are you sure want to exit the App?");
+            dialogExit("Are you sure want to quit the App?");
         }
     }
 
@@ -111,6 +129,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_account) {
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+        } else if (id == R.id.update_account) {
+            startActivity(new Intent(MainActivity.this, UpdateProfileActivity.class));
         } else if (id == R.id.nav_logout) {
             FacebookSdk.sdkInitialize(getApplicationContext());
             PrefUtils.clearCurrentUser(MainActivity.this);
@@ -139,8 +159,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dialog.setView(viewDialog);
         TextView message = (TextView) viewDialog.findViewById(R.id.message);
         message.setText(strMessage);
-        IconTextView icon = (IconTextView) viewDialog.findViewById(R.id.icon);
-        icon.setText("{fa-times-circle}");
         TextView activate = (TextView) viewDialog.findViewById(R.id.ok);
         activate.setText("Exit");
         activate.setOnClickListener(new View.OnClickListener() {
@@ -157,5 +175,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         dialog.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        new MenuInflater(this).inflate(R.menu.main, menu);
+        MenuItem itemSearch = menu.findItem(R.id.search);
+        RelativeLayout layoutSearch = (RelativeLayout) itemSearch.getActionView();
+        RoundedImageView iconSearch = (RoundedImageView) layoutSearch.findViewById(R.id.img_search);
+        iconSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentNew = new Intent(MainActivity.this, ActivitySearch.class);
+                intentNew.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intentNew);
+            }
+        });
+
+        return (super.onCreateOptionsMenu(menu));
+    }
+
+    public static void verifyStoragePermissions(Activity activity) {
+        int permission = ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
     }
 }

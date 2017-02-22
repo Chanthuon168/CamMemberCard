@@ -309,8 +309,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         viewDialog.findViewById(R.id.cancel).setVisibility(View.VISIBLE);
         TextView message = (TextView) viewDialog.findViewById(R.id.message);
         message.setText(strMessage);
-        IconTextView icon = (IconTextView) viewDialog.findViewById(R.id.icon);
-        icon.setText("{fa-times-circle}");
         viewDialog.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -336,8 +334,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         viewDialog.findViewById(R.id.cancel).setVisibility(View.GONE);
         TextView message = (TextView) viewDialog.findViewById(R.id.message);
         message.setText(strMessage);
-        IconTextView icon = (IconTextView) viewDialog.findViewById(R.id.icon);
-        icon.setText("{fa-times-circle}");
         viewDialog.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
