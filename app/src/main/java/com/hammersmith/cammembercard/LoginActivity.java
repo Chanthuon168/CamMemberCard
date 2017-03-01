@@ -38,6 +38,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.hammersmith.cammembercard.model.ForgotPassword;
 import com.hammersmith.cammembercard.model.User;
 import com.joanzapata.iconify.widget.IconTextView;
 
@@ -64,11 +65,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private EditText email, password;
     private LinearLayout lUser, lMerchandise;
     private String strLoginAs = "isUser";
+    private AlertDialog dialogForgot;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+    private ForgotPassword forgotPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +102,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         findViewById(R.id.btnFb).setOnClickListener(this);
         findViewById(R.id.btnGoogleSignIn).setOnClickListener(this);
         findViewById(R.id.l_login).setOnClickListener(this);
+        findViewById(R.id.txtForgetPass).setOnClickListener(this);
         email = (EditText) findViewById(R.id.input_email);
         password = (EditText) findViewById(R.id.input_password);
         lUser = (LinearLayout) findViewById(R.id.lUser);
@@ -283,6 +287,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             user.setSocialLink(linkGoogle);
             user.setPhoto(profileGoogle);
             user.setLoginAs("isUser");
+            user.setSocialType("gg");
             PrefUtils.setCurrentUser(user, LoginActivity.this);
             saveUserSocial(nameGoogle, emailGoogle, profileGoogle, linkGoogle, "gg");
             signOut();
@@ -329,6 +334,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         user.setSocialLink(linkFb);
                         user.setPhoto(photo);
                         user.setLoginAs("isUser");
+                        user.setSocialType("fb");
                         PrefUtils.setCurrentUser(user, LoginActivity.this);
                         saveUserSocial(nameFb, emailFb, photo, linkFb, "fb");
                     } catch (JSONException e) {
@@ -402,6 +408,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             case R.id.lMerchandise:
                 updateLayout(false);
                 break;
+            case R.id.txtForgetPass:
+                dialogForgotPass();
+                break;
         }
     }
 
@@ -421,6 +430,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     userPref.setSocialLink(user.getSocialLink());
                     userPref.setPhoto(user.getPhoto());
                     userPref.setLoginAs(user.getLoginAs());
+                    userPref.setSocialType(user.getSocialType());
                     PrefUtils.setCurrentUser(userPref, LoginActivity.this);
                     if (user.getLoginAs().equals("isMerchandise")) {
                         Intent intent = new Intent(LoginActivity.this, MainMerchandiseActivity.class);
@@ -445,6 +455,55 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 hideProgressDialog();
             }
         });
+    }
+
+    private void dialogForgotPass() {
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View viewDialog = factory.inflate(R.layout.layout_forgot_password, null);
+        dialogForgot = new AlertDialog.Builder(this).create();
+        dialogForgot.setView(viewDialog);
+        final EditText edEmail = (EditText) viewDialog.findViewById(R.id.email);
+        viewDialog.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogForgot.dismiss();
+            }
+        });
+        viewDialog.findViewById(R.id.lConfirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email = edEmail.getText().toString();
+                if (email.equals("")) {
+                    dialog("Please enter your email address");
+                } else {
+                    showProgressDialog();
+                    forgotPassword = new ForgotPassword(email);
+                    ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+                    Call<ForgotPassword> call = service.forgotPassword(forgotPassword);
+                    call.enqueue(new Callback<ForgotPassword>() {
+                        @Override
+                        public void onResponse(Call<ForgotPassword> call, Response<ForgotPassword> response) {
+                            hideProgressDialog();
+                            forgotPassword = response.body();
+                            if (forgotPassword != null) {
+                                if (forgotPassword.getMsg().equals("Please check your email new password was sent")) {
+                                    dialogForgot.dismiss();
+                                }
+                                dialog(forgotPassword.getMsg());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ForgotPassword> call, Throwable t) {
+                            hideProgressDialog();
+                            dialog("Please check your internet connection");
+                        }
+                    });
+                }
+            }
+        });
+
+        dialogForgot.show();
     }
 
     @Override
@@ -528,6 +587,26 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             lUser.setBackgroundResource(R.color.transparent);
             strLoginAs = "isMerchandise";
         }
+    }
+
+    private void dialog(String strMessage) {
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View viewDialog = factory.inflate(R.layout.layout_dialog, null);
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.setView(viewDialog);
+        TextView message = (TextView) viewDialog.findViewById(R.id.message);
+        viewDialog.findViewById(R.id.cancel).setVisibility(View.GONE);
+        message.setText(strMessage);
+        TextView activate = (TextView) viewDialog.findViewById(R.id.ok);
+        activate.setText("Close");
+        activate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
 }

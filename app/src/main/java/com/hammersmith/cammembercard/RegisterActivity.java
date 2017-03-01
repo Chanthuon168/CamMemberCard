@@ -142,6 +142,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
             user.setEmail(emailGoogle);
             user.setSocialLink(linkGoogle);
             user.setPhoto(profileGoogle);
+            user.setLoginAs("isUser");
+            user.setSocialType("gg");
             PrefUtils.setCurrentUser(user, RegisterActivity.this);
             saveUserSocial(nameGoogle, emailGoogle, profileGoogle, linkGoogle, "gg");
             signOut();
@@ -187,6 +189,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                         user.setEmail(emailFb);
                         user.setSocialLink(linkFb);
                         user.setPhoto(photo);
+                        user.setLoginAs("isUser");
+                        user.setSocialType("fb");
                         PrefUtils.setCurrentUser(user, RegisterActivity.this);
                         saveUserSocial(nameFb, emailFb, photo, linkFb, "fb");
                     } catch (JSONException e) {

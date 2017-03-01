@@ -36,6 +36,14 @@ public class User {
     private String address;
     @SerializedName("contact")
     private String contact;
+    @SerializedName("num_card")
+    private int numCard;
+    @SerializedName("num_scan")
+    private int numScan;
+    @SerializedName("point")
+    private int point;
+    @SerializedName("rating")
+    private String rating;
 
     public User() {
     }
@@ -73,6 +81,8 @@ public class User {
         this.contact = contact;
         this.photo = photo;
     }
+
+
 
     public String getMsg() {
         return msg;
@@ -200,5 +210,37 @@ public class User {
 
     public void setLoginAs(String loginAs) {
         this.loginAs = loginAs;
+    }
+
+    public int getNumCard() {
+        return numCard;
+    }
+
+    public void setNumCard(int numCard) {
+        this.numCard = numCard;
+    }
+
+    public int getNumScan() {
+        return numScan;
+    }
+
+    public void setNumScan(int numScan) {
+        this.numScan = numScan;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 }

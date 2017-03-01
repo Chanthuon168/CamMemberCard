@@ -4,6 +4,7 @@ import com.hammersmith.cammembercard.model.Account;
 import com.hammersmith.cammembercard.model.Album;
 import com.hammersmith.cammembercard.model.Condition;
 import com.hammersmith.cammembercard.model.Discount;
+import com.hammersmith.cammembercard.model.ForgotPassword;
 import com.hammersmith.cammembercard.model.MemberCard;
 import com.hammersmith.cammembercard.model.CollectionCard;
 import com.hammersmith.cammembercard.model.Merchandise;
@@ -94,5 +95,14 @@ public interface ApiInterface {
 
     @POST("update_account")
     Call<Account> updateAccount(@Body Account account);
+
+    @GET("user_history/{user_link}")
+    Call<List<Scanned>> getUserScanned(@Path("user_link") String userLink);
+
+    @POST("reset_password")
+    Call<Account> resetUserPassword(@Body Account account);
+
+    @POST("forgot_password")
+    Call<ForgotPassword> forgotPassword(@Body ForgotPassword ForgotPassword);
 
 }

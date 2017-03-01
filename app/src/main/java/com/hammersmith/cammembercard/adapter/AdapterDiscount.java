@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,7 +74,7 @@ public class AdapterDiscount extends RecyclerView.Adapter<AdapterDiscount.MyView
                     public void onClick(View v) {
                         activityDetail.closeDialog();
                         try {
-                            dialogScan(discounts.get(position).getMerId(), ApiClient.BASE_URL + discounts.get(position).getPhoto(), discounts.get(position).getName(), discounts.get(position).getDiscount());
+                            dialogScan(discounts.get(position).getMerId(), ApiClient.BASE_URL + discounts.get(position).getPhoto(), discounts.get(position).getName(), discounts.get(position).getDiscount(),discounts.get(position).getRating());
                         } catch (WriterException e) {
                             e.printStackTrace();
                         }
@@ -101,7 +102,7 @@ public class AdapterDiscount extends RecyclerView.Adapter<AdapterDiscount.MyView
         }
     }
 
-    private void dialogScan(int merId, String strImage, String strName, String strDiscount) throws WriterException {
+    private void dialogScan(int merId, String strImage, String strName, String strDiscount, String strRating) throws WriterException {
         LayoutInflater factory = LayoutInflater.from(activity);
         final View viewDialog = factory.inflate(R.layout.dialog_scan, null);
         final AlertDialog dialog = new AlertDialog.Builder(activity).create();
@@ -128,11 +129,13 @@ public class AdapterDiscount extends RecyclerView.Adapter<AdapterDiscount.MyView
         ImageView imgCode = (ImageView) viewDialog.findViewById(R.id.imgResult);
         ImageView profile = (ImageView) viewDialog.findViewById(R.id.profile);
         TextView name = (TextView) viewDialog.findViewById(R.id.name);
+        RatingBar ratingBar = (RatingBar) viewDialog.findViewById(R.id.ratingBar);
         TextView discount = (TextView) viewDialog.findViewById(R.id.discount);
         Uri uri = Uri.parse(strImage);
         context = profile.getContext();
         Picasso.with(context).load(uri).into(profile);
         name.setText(strName);
+        ratingBar.setRating(Float.parseFloat(strRating));
         discount.setText(strDiscount);
         imgCode.setImageBitmap(generateQrCode(data));
         dialog.show();

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.hammersmith.cammembercard.R;
@@ -51,6 +52,7 @@ public class AdapterMostScanned extends RecyclerView.Adapter<AdapterMostScanned.
         holder.name.setText(scans.get(position).getName());
         holder.discount.setText(scans.get(position).getLastDiscount() + "% OFF");
         holder.using_date.setText("Start using " + formatDate(scans.get(position).getCreateAt()));
+        holder.ratingBar.setRating(Float.parseFloat(scans.get(position).getRating()));
         int num_scanned = Integer.parseInt(scans.get(position).getNumberScanned());
         String time = "";
         if (num_scanned > 1) {
@@ -67,6 +69,7 @@ public class AdapterMostScanned extends RecyclerView.Adapter<AdapterMostScanned.
                 intent.putExtra("photo",scans.get(position).getPhoto());
                 intent.putExtra("name",scans.get(position).getName());
                 intent.putExtra("scanned",scans.get(position).getNumberScanned());
+                intent.putExtra("rating",scans.get(position).getRating());
                 activity.startActivity(intent);
             }
         });
@@ -80,6 +83,7 @@ public class AdapterMostScanned extends RecyclerView.Adapter<AdapterMostScanned.
     public class MyViewHolder extends RecyclerView.ViewHolder {
         RoundedImageView profile;
         TextView name, discount, using_date, number_scanned;
+        RatingBar ratingBar;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -88,6 +92,7 @@ public class AdapterMostScanned extends RecyclerView.Adapter<AdapterMostScanned.
             discount = (TextView) itemView.findViewById(R.id.discount);
             using_date = (TextView) itemView.findViewById(R.id.using_date);
             number_scanned = (TextView) itemView.findViewById(R.id.number_scanned);
+            ratingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
         }
     }
 

@@ -51,11 +51,11 @@
                             android:layout_height="wrap_content">
 
                             <com.hammersmith.cammembercard.RoundedImageView
+                                android:scaleType="centerCrop"
                                 android:id="@+id/profile"
                                 android:layout_width="110dp"
                                 android:layout_height="110dp"
                                 android:elevation="5dp"
-                                android:scaleType="centerCrop"
                                 app:border_width="0dip"
                                 app:is_oval="true"
                                 app:round_background="true" />
@@ -69,6 +69,7 @@
 
                             <com.hammersmith.cammembercard.RoundedImageView
                                 android:id="@+id/camera"
+                                android:visibility="gone"
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
                                 android:layout_marginTop="55dp"
@@ -76,7 +77,6 @@
                                 android:elevation="5dp"
                                 android:padding="8dp"
                                 android:src="@drawable/camera"
-                                android:visibility="gone"
                                 app:border_width="0dip"
                                 app:is_oval="true"
                                 app:round_background="true" />
@@ -103,7 +103,6 @@
                         android:text="Reset Password"
                         android:textColor="@color/red_light" />
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:layout_marginTop="10dp"
@@ -226,6 +225,7 @@
                         android:text="Save Change"
                         android:textAllCaps="false"
                         android:textColor="@color/icons" />
+
                 </LinearLayout>
 
             </LinearLayout>

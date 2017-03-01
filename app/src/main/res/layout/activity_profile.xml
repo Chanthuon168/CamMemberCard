@@ -41,48 +41,17 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                    <com.hammersmith.cammembercard.RoundedImageView
+                        android:id="@+id/profile"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:elevation="5dp"
+                        android:scaleType="centerCrop"
+                        app:border_width="0dip"
+                        app:is_oval="true"
+                        app:round_background="true" />
 
-                            <com.hammersmith.cammembercard.RoundedImageView
-                                android:id="@+id/profile"
-                                android:layout_width="130dp"
-                                android:layout_height="130dp"
-                                android:scaleType="centerCrop"
-                                android:elevation="5dp"
-                                app:border_width="0dip"
-                                app:is_oval="true"
-                                app:round_background="true" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="140dp"
-                            android:layout_height="130dp"
-                            android:layout_alignParentBottom="true"
-                            android:gravity="right">
-
-                            <com.hammersmith.cammembercard.RoundedImageView
-                                android:id="@+id/camera"
-                                android:visibility="gone"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_marginTop="75dp"
-                                android:background="@color/red"
-                                android:elevation="5dp"
-                                android:padding="8dp"
-                                android:src="@drawable/camera"
-                                app:border_width="0dip"
-                                app:is_oval="true"
-                                app:round_background="true" />
-
-                        </LinearLayout>
-
-                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/name"
@@ -92,6 +61,15 @@
                         android:textColor="@color/primary_text_light"
                         android:textSize="20sp"
                         android:textStyle="bold" />
+
+                    <RatingBar
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:id="@+id/ratingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:rating="0.0"
+                        android:stepSize="0.5" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -151,9 +129,9 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/num_card"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="789"
                                 android:textColor="@color/primary_text_light"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />
@@ -173,9 +151,9 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/point"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="2k"
                                 android:textColor="@color/primary_text_light"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />
@@ -195,9 +173,9 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/scan"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="1k"
                                 android:textColor="@color/primary_text_light"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />
@@ -205,7 +183,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Cycle"
+                                android:text="Scans"
                                 android:textSize="16sp" />
                         </LinearLayout>
 

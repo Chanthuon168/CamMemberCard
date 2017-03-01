@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.hammersmith.cammembercard.model.User;
@@ -20,13 +21,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProfileActivity extends AppCompatActivity implements View.OnClickListener{
+public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
     private Toolbar toolbar;
-    private RoundedImageView profile, camera;
+    private RoundedImageView profile;
     private User user, userSocial;
     private Context context;
-    private TextView name, email, memId, gender, dateOfBirth, contact, address, country;
+    private TextView name, email, memId, gender, dateOfBirth, contact, address, country, numCard, point, numScan;
     private SwipeRefreshLayout swipeRefresh;
+    private RatingBar ratingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +45,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         contact = (TextView) findViewById(R.id.contact);
         address = (TextView) findViewById(R.id.address);
         country = (TextView) findViewById(R.id.country);
-        camera = (RoundedImageView) findViewById(R.id.camera);
+        numCard = (TextView) findViewById(R.id.num_card);
+        numScan = (TextView) findViewById(R.id.scan);
+        point = (TextView) findViewById(R.id.point);
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
 
-        swipeRefresh = (SwipeRefreshLayout)findViewById(R.id.swiperefresh);
+        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         swipeRefresh.setRefreshing(true);
         swipeRefresh.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN, Color.CYAN);
         findViewById(R.id.lEdit).setOnClickListener(this);
@@ -67,39 +72,22 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             public void onResponse(Call<User> call, Response<User> response) {
                 swipeRefresh.setRefreshing(false);
                 swipeRefresh.setEnabled(false);
-                camera.setVisibility(View.VISIBLE);
                 user = response.body();
                 name.setText(user.getName());
                 email.setText(user.getEmail());
                 Uri uri = Uri.parse(user.getPhoto());
                 context = profile.getContext();
                 Picasso.with(context).load(uri).into(profile);
-                if (user.getMemId() != null){
-                    memId.setText(user.getMemId());
-                }
-                if (user.getGender() != null) {
-                    gender.setText(user.getGender());
-                }else{
-                    gender.setText("None");
-                }
-                if (user.getDateOfBirth() != null){
-                    dateOfBirth.setText(user.getDateOfBirth());
-                }else {
-                    dateOfBirth.setText("None");
-                }
-                if (user.getContact() != null){
-                    contact.setText(user.getContact());
-                }else{
-                    contact.setText("None");
-                }
-                if (user.getAddress() != null){
-                    address.setText(user.getAddress());
-                }else{
-                    address.setText("None");
-                }
-                if (user.getCountry() != null){
-                    country.setText(user.getCountry());
-                }
+                numCard.setText("" + user.getNumCard());
+                numScan.setText("" + user.getNumScan());
+                point.setText("" + user.getPoint());
+                ratingBar.setRating(Float.parseFloat(user.getRating()));
+                memId.setText(user.getMemId());
+                gender.setText(user.getGender());
+                dateOfBirth.setText(user.getDateOfBirth());
+                contact.setText(user.getContact());
+                address.setText(user.getAddress());
+                country.setText(user.getCountry());
             }
 
             @Override
@@ -113,7 +101,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.lEdit:
-                    startActivity(new Intent(ProfileActivity.this, UpdateProfileActivity.class));
+                startActivity(new Intent(ProfileActivity.this, UpdateProfileActivity.class));
                 break;
         }
     }

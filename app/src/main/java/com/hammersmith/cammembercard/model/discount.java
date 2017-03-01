@@ -18,6 +18,8 @@ public class Discount {
     private String photo;
     @SerializedName("status")
     private String status;
+    @SerializedName("rating")
+    private String rating;
 
     public Discount() {
     }
@@ -68,5 +70,13 @@ public class Discount {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 }

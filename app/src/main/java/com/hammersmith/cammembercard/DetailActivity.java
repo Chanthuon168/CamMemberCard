@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.hammersmith.cammembercard.adapter.AdapterDiscount;
@@ -61,6 +62,7 @@ public class DetailActivity extends AppCompatActivity {
     private User user;
     private String strDiscount;
     private Discount discount;
+    private String strRating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,7 @@ public class DetailActivity extends AppCompatActivity {
             strImgCard = getIntent().getStringExtra("image_card");
             strLogo = getIntent().getStringExtra("logo");
             strStatus = getIntent().getStringExtra("status");
+            strRating = getIntent().getStringExtra("rating");
             expDate.setText("EXP. " + strExpDate);
             name.setText(strName);
             Uri uri = Uri.parse(ApiClient.BASE_URL + strImgCard);
@@ -194,6 +197,8 @@ public class DetailActivity extends AppCompatActivity {
         });
         ImageView image = (ImageView) viewDialog.findViewById(R.id.image_card);
         TextView name = (TextView) viewDialog.findViewById(R.id.name);
+        RatingBar ratingBar = (RatingBar) viewDialog.findViewById(R.id.ratingBar);
+        ratingBar.setRating(Float.parseFloat(strRating));
         Uri uri = Uri.parse(ApiClient.BASE_URL + strLogo);
         context = image.getContext();
         Picasso.with(context).load(uri).into(image);

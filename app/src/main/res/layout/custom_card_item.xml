@@ -50,6 +50,7 @@
                             android:background="@color/divider"
                             android:elevation="5dp"
                             android:padding="2dp"
+                            android:scaleType="centerCrop"
                             app:border_width="0dip"
                             app:is_oval="true"
                             app:round_background="true" />
@@ -64,46 +65,19 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
+                    android:gravity="center">
 
-                    <com.joanzapata.iconify.widget.IconTextView
+                    <RatingBar
+                        android:id="@+id/ratingBar"
+                        style="?android:attr/ratingBarStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="2dp"
-                        android:text="{fa-star}"
-                        android:textColor="@color/red_light" />
-
-                    <com.joanzapata.iconify.widget.IconTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="2dp"
-                        android:text="{fa-star}"
-                        android:textColor="@color/red_light" />
-
-                    <com.joanzapata.iconify.widget.IconTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="2dp"
-                        android:text="{fa-star}"
-                        android:textColor="@color/red_light" />
-
-                    <com.joanzapata.iconify.widget.IconTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="2dp"
-                        android:text="{fa-star-o}"
-                        android:textColor="@color/red_light" />
-
-                    <com.joanzapata.iconify.widget.IconTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="2dp"
-                        android:text="{fa-star-o}"
-                        android:textColor="@color/red_light" />
+                        android:numStars="5"
+                        android:rating="0.0"
+                        android:stepSize="0.5" />
 
                 </LinearLayout>
 

@@ -5,7 +5,7 @@
         android:color="@color/icons">
 
     </stroke>
-    <solid android:color="@color/red_light" />
+    <solid android:color="@color/red" />
     <corners
         android:bottomRightRadius="5dp"
         android:topRightRadius="5dp" />

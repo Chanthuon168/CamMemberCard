@@ -41,6 +41,10 @@
                     android:icon="@drawable/account_settings_variant"
                     android:title="Update Account" />
                 <item
+                    android:id="@+id/history"
+                    android:icon="@drawable/qrcode_scan_merchandise"
+                    android:title="History" />
+                <item
                     android:id="@+id/nav_logout"
                     android:icon="@drawable/logout"
                     android:title="Log out" />

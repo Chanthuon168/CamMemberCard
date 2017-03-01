@@ -30,6 +30,8 @@ public class TodayScanned {
     private String createAt;
     @SerializedName("scanned")
     private String numberScanned;
+    @SerializedName("rating")
+    private String rating;
 
     public TodayScanned() {
     }
@@ -140,5 +142,13 @@ public class TodayScanned {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 }

@@ -22,6 +22,8 @@ public class Review {
     private String name;
     @SerializedName("photo")
     private String profile;
+    @SerializedName("rating")
+    private String rating;
 
     public Review() {
     }
@@ -95,5 +97,13 @@ public class Review {
 
     public void setProfile(String profile) {
         this.profile = profile;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 }

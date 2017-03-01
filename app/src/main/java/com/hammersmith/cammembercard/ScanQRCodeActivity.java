@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +55,7 @@ public class ScanQRCodeActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefresh;
     private Scanned scan;
     private String currentDateTime;
+    private RatingBar ratingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class ScanQRCodeActivity extends AppCompatActivity {
         profile = (RoundedImageView) findViewById(R.id.profile);
         name = (TextView) findViewById(R.id.name);
         mainBody = (NestedScrollView) findViewById(R.id.mainBody);
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         currentDateTime = dateFormat.format(new Date());
@@ -117,6 +120,7 @@ public class ScanQRCodeActivity extends AppCompatActivity {
                     context = profile.getContext();
                     Picasso.with(context).load(uri).into(profile);
                     name.setText(merchandise.getMerName());
+                    ratingBar.setRating(Float.parseFloat(merchandise.getRating()));
                     imgScan.setVisibility(View.VISIBLE);
                 }
             }

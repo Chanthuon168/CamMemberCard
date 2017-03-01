@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.hammersmith.cammembercard.ApiClient;
@@ -61,6 +62,7 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
         Picasso.with(context).load(uriProfile).into(holder.profile);
         holder.name.setText(members.get(position).getName());
         holder.address.setText(members.get(position).getAddress());
+        holder.ratingBar.setRating(Float.parseFloat(members.get(position).getRating()));
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +74,7 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
                 intent.putExtra("image_card", members.get(position).getImgCard());
                 intent.putExtra("logo", members.get(position).getImgMerchandise());
                 intent.putExtra("status", members.get(position).getStatus());
+                intent.putExtra("rating", members.get(position).getRating());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 activity.startActivity(intent);
             }
@@ -122,6 +125,7 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
         ImageView image;
         RoundedImageView profile, imgCard;
         TextView name, address, numUser;
+        RatingBar ratingBar;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -131,6 +135,7 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
             name = (TextView) itemView.findViewById(R.id.name);
             address = (TextView) itemView.findViewById(R.id.address);
             numUser = (TextView) itemView.findViewById(R.id.numUser);
+            ratingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
         }
     }
 }

@@ -38,6 +38,7 @@
                     android:layout_height="90dp" />
 
                 <EditText
+                    android:lines="1"
                     android:id="@+id/input_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -52,6 +53,7 @@
                     android:textSize="16sp" />
 
                 <EditText
+                    android:lines="1"
                     android:id="@+id/input_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -66,6 +68,7 @@
                     android:textSize="16sp" />
 
                 <EditText
+                    android:lines="1"
                     android:id="@+id/input_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -80,12 +83,13 @@
                     android:textColorHint="@color/icons"
                     android:textSize="16sp" />
 
-                k<EditText
+                <EditText
+                    android:lines="1"
                     android:id="@+id/input_confirm_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                android:background="@drawable/bg_edittext"
+                    android:background="@drawable/bg_edittext"
                     android:fontFamily="sans-serif"
                     android:hint="Confirm Password"
                     android:inputType="textPassword"
@@ -122,127 +126,130 @@
                         android:textColor="@color/icons" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_above="@+id/signIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0.5dp"
+                    android:layout_weight="1"
+                    android:background="@color/icons" />
+
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:weightSum="3">
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:text="Or Sing in With"
+                    android:textColor="@color/icons" />
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0.5dp"
-                        android:layout_weight="1"
-                        android:background="@color/icons" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0.5dp"
+                    android:layout_weight="1"
+                    android:background="@color/icons" />
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="sans-serif-light"
-                        android:gravity="center"
-                        android:text="Or Sing in With"
-                        android:textColor="@color/icons" />
+            <LinearLayout
+                android:id="@+id/btnFb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_facebook"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp">
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0.5dp"
-                        android:layout_weight="1"
-                        android:background="@color/icons" />
-                </LinearLayout>
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="{fa-facebook-official}"
+                    android:textColor="@color/icons"
+                    android:textSize="18sp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="20dp"
-                    android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Login in with Facebook"
+                    android:textColor="@color/icons" />
 
-                    <LinearLayout
-                        android:id="@+id/btnFb"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/button_facebook"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="10dp">
+            </LinearLayout>
 
-                        <com.joanzapata.iconify.widget.IconTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="{fa-facebook-official}"
-                            android:textColor="@color/icons"
-                            android:textSize="18sp" />
+            <LinearLayout
+                android:id="@+id/btnGoogleSignIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_google"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:fontFamily="sans-serif-light"
-                            android:text="Login in with Facebook"
-                            android:textColor="@color/icons" />
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="{fa-google-plus}"
+                    android:textColor="@color/icons"
+                    android:textSize="18sp" />
 
-                    </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Login in with Google"
+                    android:textColor="@color/icons" />
 
-                    <LinearLayout
-                        android:id="@+id/btnGoogleSignIn"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/button_google"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="10dp">
+            </LinearLayout>
 
-                        <com.joanzapata.iconify.widget.IconTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="{fa-google-plus}"
-                            android:textColor="@color/icons"
-                            android:textSize="18sp" />
+            <LinearLayout
+                android:id="@+id/btnGoogleSignOut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_google"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:visibility="gone">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:fontFamily="sans-serif-light"
-                            android:text="Login in with Google"
-                            android:textColor="@color/icons" />
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="{fa-google-plus}"
+                    android:textColor="@color/icons"
+                    android:textSize="18sp" />
 
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/btnGoogleSignOut"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/button_google"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="10dp"
-                        android:visibility="gone">
-
-                        <com.joanzapata.iconify.widget.IconTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="{fa-google-plus}"
-                            android:textColor="@color/icons"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:fontFamily="sans-serif-light"
-                            android:text="Login in with Google"
-                            android:textColor="@color/icons" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Login in with Google"
+                    android:textColor="@color/icons" />
 
             </LinearLayout>
 

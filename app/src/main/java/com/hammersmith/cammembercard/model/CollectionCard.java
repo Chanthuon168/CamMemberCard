@@ -19,6 +19,8 @@ public class CollectionCard {
     private String imgMerchandise;
     @SerializedName("name")
     private String name;
+    @SerializedName("rating")
+    private String rating;
     @SerializedName("address")
     private String address;
     @SerializedName("exp")
@@ -134,5 +136,13 @@ public class CollectionCard {
 
     public void setSizeStats(String sizeStats) {
         this.sizeStats = sizeStats;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 }

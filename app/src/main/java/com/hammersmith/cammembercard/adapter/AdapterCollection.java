@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.hammersmith.cammembercard.ApiClient;
@@ -63,6 +64,7 @@ public class AdapterCollection extends RecyclerView.Adapter<AdapterCollection.My
             Picasso.with(context).load(uriProfile).into(holder.profile);
             holder.name.setText(collections.get(position).getName());
             holder.address.setText(collections.get(position).getAddress());
+            holder.ratingBar.setRating(Float.parseFloat(collections.get(position).getRating()));
             holder.image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -74,6 +76,7 @@ public class AdapterCollection extends RecyclerView.Adapter<AdapterCollection.My
                     intent.putExtra("image_card", collections.get(position).getImgCard());
                     intent.putExtra("logo", collections.get(position).getImgMerchandise());
                     intent.putExtra("status", collections.get(position).getStatus());
+                    intent.putExtra("rating", collections.get(position).getRating());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     activity.startActivity(intent);
                 }
@@ -125,6 +128,7 @@ public class AdapterCollection extends RecyclerView.Adapter<AdapterCollection.My
         ImageView image;
         RoundedImageView profile, imgCard;
         TextView name, address, numUser;
+        RatingBar ratingBar;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -134,6 +138,7 @@ public class AdapterCollection extends RecyclerView.Adapter<AdapterCollection.My
             name = (TextView) itemView.findViewById(R.id.name);
             address = (TextView) itemView.findViewById(R.id.address);
             numUser = (TextView) itemView.findViewById(R.id.numUser);
+            ratingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
         }
     }
 }

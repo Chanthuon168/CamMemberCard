@@ -17,16 +17,13 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hammersmith.cammembercard.model.Account;
 import com.hammersmith.cammembercard.model.User;
-import com.joanzapata.iconify.widget.IconTextView;
 import com.kosalgeek.android.photoutil.GalleryPhoto;
 import com.kosalgeek.android.photoutil.PhotoLoader;
 import com.squareup.picasso.Picasso;
@@ -42,7 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UpdateProfileActivity extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener {
+public class UpdateMerchandiseAccountActivity extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener {
     private Toolbar toolbar;
     private RoundedImageView profile, camera;
     private Context context;
@@ -58,15 +55,14 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
     private static String encoded;
     private Account account;
     private String userLink;
+    private ProgressDialog mProgressDialog;
     private TextView resetPassword;
     private AlertDialog dialogResetPass;
-
-    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_update_profile);
+        setContentView(R.layout.activity_update_merchandise_account);
         user = PrefUtils.getCurrentUser(getApplicationContext());
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         profile = (RoundedImageView) findViewById(R.id.profile);
@@ -101,13 +97,13 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
             }
         });
 
+        galleryPhoto = new GalleryPhoto(this);
+
+        userLink = user.getSocialLink();
         if (user.getSocialType().equals("ac")) {
             resetPassword.setVisibility(View.VISIBLE);
         }
 
-        galleryPhoto = new GalleryPhoto(this);
-
-        userLink = user.getSocialLink();
 
         userSocial = new User(user.getSocialLink());
         ApiInterface serviceUser = ApiClient.getClient().create(ApiInterface.class);
@@ -233,7 +229,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                         }
 
                     };
-                    new DatePickerDialog(UpdateProfileActivity.this, date, myCalendar
+                    new DatePickerDialog(UpdateMerchandiseAccountActivity.this, date, myCalendar
                             .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                             myCalendar.get(Calendar.DAY_OF_MONTH)).show();
                 }
@@ -328,15 +324,15 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                 hideProgressDialog();
                 imageList.clear();
                 account = response.body();
-                if (account.getMsg().equals("available")) {
+                if (account != null) {
                     mUser = new User();
                     mUser.setSocialLink(account.getUserLink());
                     mUser.setPhoto(account.getPhoto());
                     mUser.setEmail(account.getEmail());
                     mUser.setName(account.getName());
-                    mUser.setLoginAs("isUser");
+                    mUser.setLoginAs("isMerchandise");
                     mUser.setSocialType(account.getSocialType());
-                    PrefUtils.setCurrentUser(mUser, UpdateProfileActivity.this);
+                    PrefUtils.setCurrentUser(mUser, UpdateMerchandiseAccountActivity.this);
                     dialogSuccess("Account has been updated", "Success");
                 } else {
                     dialogSuccess("Error while updating account", "Fail");
@@ -364,11 +360,11 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onResponse(Call<Account> call, Response<Account> response) {
                 account = response.body();
-                if (account.getMsg().equals("uploaded_failed")) {
+                if (account.getMsg().equals("uploaded_failed")){
                     hideProgressDialog();
                     dialogSuccess("Error while uploading profile account", "Error");
-                } else {
-                    Log.d("userLink", userLink + "");
+                }else{
+                    Log.d("userLink",userLink+"");
                     String strPhoto = ApiClient.BASE_URL + "images/" + account.getMsg();
                     Log.d("strPhoto", strPhoto);
                     account = new Account(userLink, strPhoto, strName, strGender, strPhone, strCountry, strAddress, strDob);
@@ -380,15 +376,15 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                             hideProgressDialog();
                             imageList.clear();
                             account = response.body();
-                            if (account.getMsg().equals("available")) {
+                            if (account != null) {
                                 mUser = new User();
                                 mUser.setSocialLink(account.getUserLink());
                                 mUser.setPhoto(account.getPhoto());
                                 mUser.setEmail(account.getEmail());
                                 mUser.setName(account.getName());
-                                mUser.setLoginAs("isUser");
+                                mUser.setLoginAs("isMerchandise");
                                 mUser.setSocialType(account.getSocialType());
-                                PrefUtils.setCurrentUser(mUser, UpdateProfileActivity.this);
+                                PrefUtils.setCurrentUser(mUser, UpdateMerchandiseAccountActivity.this);
                                 dialogSuccess("Account has been updated", "Success");
                             } else {
                                 dialogSuccess("Error while updating account", "Fail");
@@ -410,7 +406,6 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
             }
         });
     }
-
     private void dialogResetPassword() {
         LayoutInflater factory = LayoutInflater.from(this);
         final View viewDialog = factory.inflate(R.layout.layout_dialog_reset_password, null);
@@ -438,7 +433,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                         if (!strNewPass.equals(strConPass)) {
                             dialogSuccess("Password is not match", "Close");
                         } else {
-                            showProgressDialog("Password is resetting");
+                            showProgressDialog("Password is resetting...");
                             resetPassword(userLink, strCurrPass, strNewPass);
                         }
                     }else{
@@ -452,7 +447,6 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
 
         dialogResetPass.show();
     }
-
     private void resetPassword(String userLink, String currentPass, String newPass) {
         account = new Account(userLink, currentPass, newPass);
         ApiInterface serviceResetPass = ApiClient.getClient().create(ApiInterface.class);

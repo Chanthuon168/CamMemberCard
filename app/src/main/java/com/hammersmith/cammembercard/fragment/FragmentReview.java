@@ -137,6 +137,7 @@ public class FragmentReview extends Fragment implements View.OnClickListener {
                     rev.setName(review.getName());
                     rev.setComment(review.getComment());
                     rev.setCreatedAt(review.getCreatedAt());
+                    rev.setRating(review.getRating());
                     reviews.add(rev);
                     adapterReview.notifyDataSetChanged();
                     if (adapterReview.getItemCount() > 1) {

@@ -68,7 +68,7 @@ public class MainMerchandiseActivity extends AppCompatActivity implements Naviga
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainMerchandiseActivity.this, ProfileActivity.class));
+                startActivity(new Intent(MainMerchandiseActivity.this, MerchandiseProfile.class));
             }
         });
         ApiInterface serviceMerchandise = ApiClient.getClient().create(ApiInterface.class);
@@ -120,7 +120,7 @@ public class MainMerchandiseActivity extends AppCompatActivity implements Naviga
         } else if (id == R.id.nav_account) {
             startActivity(new Intent(MainMerchandiseActivity.this, MerchandiseProfile.class));
         } else if (id == R.id.update_account) {
-            startActivity(new Intent(MainMerchandiseActivity.this, UpdateProfileActivity.class));
+            startActivity(new Intent(MainMerchandiseActivity.this, UpdateMerchandiseAccountActivity.class));
         } else if (id == R.id.nav_logout) {
             FacebookSdk.sdkInitialize(getApplicationContext());
             PrefUtils.clearCurrentUser(MainMerchandiseActivity.this);

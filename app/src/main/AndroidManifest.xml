@@ -78,8 +78,8 @@
             android:theme="@style/AppThemeActivity.NoActionBarActivity" />
         <activity
             android:name=".UpdateProfileActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppThemeActivity.NoActionBarActivity" />
+            android:theme="@style/AppThemeActivity.NoActionBarActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ScanQRCodeActivity"
             android:theme="@style/AppThemeActivity.NoActionBarActivity" />
@@ -88,7 +88,9 @@
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
         <activity android:name=".MainMerchandiseActivity" />
-        <activity android:name=".MerchandiseProfile" />
+        <activity
+            android:name=".MerchandiseProfile"
+            android:theme="@style/AppThemeActivity.NoActionBarActivity" />
         <activity
             android:name=".UserDetailActivity"
             android:theme="@style/AppThemeActivity.NoActionBarActivity" />
@@ -101,7 +103,13 @@
         <activity
             android:name=".ActivityTodayScan"
             android:theme="@style/AppThemeActivity.NoActionBarActivity" />
-        <activity android:name=".ActivitySearch"
+        <activity
+            android:name=".ActivitySearch"
+            android:theme="@style/AppThemeActivity.NoActionBarActivity" />
+        <activity
+            android:name=".UpdateMerchandiseAccountActivity"
+            android:theme="@style/AppThemeActivity.NoActionBarActivity" />
+        <activity android:name=".UserHistoryActivity"
             android:theme="@style/AppThemeActivity.NoActionBarActivity"/>
     </application>
 

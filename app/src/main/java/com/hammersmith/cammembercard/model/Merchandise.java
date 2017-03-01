@@ -28,6 +28,38 @@ public class Merchandise {
     private String merName;
     @SerializedName("mer_id")
     private int merId;
+    @SerializedName("contact")
+    private String contact;
+    @SerializedName("num_card")
+    private int numCard;
+    @SerializedName("num_scan")
+    private int numScan;
+    @SerializedName("point")
+    private int point;
+    @SerializedName("rating")
+    private String rating;
+    @SerializedName("num_using")
+    private int numUsing;
+    @SerializedName("user_scan")
+    private int userScan;
+    @SerializedName("mem_id")
+    private String memId;
+    @SerializedName("country")
+    private String country;
+    @SerializedName("gender")
+    private String gender;
+    @SerializedName("date_of_birth")
+    private String dateOfBirth;
+    @SerializedName("mer_email")
+    private String merEmail;
+    @SerializedName("mer_contact")
+    private String merContact;
+    @SerializedName("mer_contact_alternate")
+    private String merContactAlternate;
+    @SerializedName("mer_address")
+    private String merAddress;
+    @SerializedName("website")
+    private String website;
 
     public Merchandise(){}
 
@@ -117,5 +149,133 @@ public class Merchandise {
 
     public void setMerId(int merId) {
         this.merId = merId;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public int getNumCard() {
+        return numCard;
+    }
+
+    public void setNumCard(int numCard) {
+        this.numCard = numCard;
+    }
+
+    public int getNumScan() {
+        return numScan;
+    }
+
+    public void setNumScan(int numScan) {
+        this.numScan = numScan;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
+    }
+
+    public String getMemId() {
+        return memId;
+    }
+
+    public void setMemId(String memId) {
+        this.memId = memId;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getMerEmail() {
+        return merEmail;
+    }
+
+    public void setMerEmail(String merEmail) {
+        this.merEmail = merEmail;
+    }
+
+    public String getMerContact() {
+        return merContact;
+    }
+
+    public void setMerContact(String merContact) {
+        this.merContact = merContact;
+    }
+
+    public String getMerContactAlternate() {
+        return merContactAlternate;
+    }
+
+    public void setMerContactAlternate(String merContactAlternate) {
+        this.merContactAlternate = merContactAlternate;
+    }
+
+    public String getMerAddress() {
+        return merAddress;
+    }
+
+    public void setMerAddress(String merAddress) {
+        this.merAddress = merAddress;
+    }
+
+    public int getNumUsing() {
+        return numUsing;
+    }
+
+    public void setNumUsing(int numUsing) {
+        this.numUsing = numUsing;
+    }
+
+    public int getUserScan() {
+        return userScan;
+    }
+
+    public void setUserScan(int userScan) {
+        this.userScan = userScan;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
     }
 }

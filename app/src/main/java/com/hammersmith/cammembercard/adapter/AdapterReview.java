@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.hammersmith.cammembercard.R;
@@ -49,6 +50,7 @@ public class AdapterReview extends RecyclerView.Adapter<AdapterReview.MyViewHold
         context = holder.profile.getContext();
         Picasso.with(context).load(uri).into(holder.profile);
         holder.name.setText(reviews.get(position).getName());
+        holder.ratingBar.setRating(Float.parseFloat(reviews.get(position).getRating()));
         holder.comment.setText(reviews.get(position).getComment());
         holder.createdAt.setText(getTimeStamp(reviews.get(position).getCreatedAt()));
     }
@@ -61,12 +63,14 @@ public class AdapterReview extends RecyclerView.Adapter<AdapterReview.MyViewHold
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView profile;
         TextView name, comment, createdAt;
+        RatingBar ratingBar;
         public MyViewHolder(View itemView) {
             super(itemView);
             profile = (ImageView) itemView.findViewById(R.id.profile);
             name = (TextView) itemView.findViewById(R.id.name);
             comment = (TextView) itemView.findViewById(R.id.comment);
             createdAt = (TextView) itemView.findViewById(R.id.createdAt);
+            ratingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
         }
     }
     public static String getTimeStamp(String dateStr) {

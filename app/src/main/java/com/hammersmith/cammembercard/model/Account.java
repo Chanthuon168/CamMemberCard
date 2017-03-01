@@ -28,8 +28,14 @@ public class Account {
     private String dob;
     @SerializedName("social_link")
     private String userLink;
+    @SerializedName("social_type")
+    private String socialType;
     @SerializedName("email")
     private String email;
+    @SerializedName("current_password")
+    private String currentPassword;
+    @SerializedName("new_password")
+    private String newPassword;
 
     public Account() {
     }
@@ -47,6 +53,12 @@ public class Account {
         this.country = country;
         this.address = address;
         this.dob = dob;
+    }
+
+    public Account(String userLink, String currentPassword, String newPassword) {
+        this.userLink = userLink;
+        this.currentPassword = currentPassword;
+        this.newPassword = newPassword;
     }
 
     public int getId() {
@@ -143,5 +155,29 @@ public class Account {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getSocialType() {
+        return socialType;
+    }
+
+    public void setSocialType(String socialType) {
+        this.socialType = socialType;
+    }
+
+    public String getCurrentPassword() {
+        return currentPassword;
+    }
+
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 }

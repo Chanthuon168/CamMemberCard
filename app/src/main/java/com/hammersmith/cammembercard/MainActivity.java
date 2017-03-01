@@ -131,7 +131,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         } else if (id == R.id.update_account) {
             startActivity(new Intent(MainActivity.this, UpdateProfileActivity.class));
-        } else if (id == R.id.nav_logout) {
+        } else if (id == R.id.history) {
+            startActivity(new Intent(MainActivity.this, UserHistoryActivity.class));
+        }else if (id == R.id.nav_logout) {
             FacebookSdk.sdkInitialize(getApplicationContext());
             PrefUtils.clearCurrentUser(MainActivity.this);
             LoginManager.getInstance().logOut();
