@@ -1,5 +1,6 @@
 package com.hammersmith.cammembercard;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -21,6 +23,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class UserHistoryActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -33,6 +36,11 @@ public class UserHistoryActivity extends AppCompatActivity {
     private int sizeHistory;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_history);
@@ -41,7 +49,7 @@ public class UserHistoryActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         swipeRefresh = (SwipeRefreshLayout)findViewById(R.id.swiperefresh);
         swipeRefresh.setRefreshing(true);
-        swipeRefresh.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN, Color.CYAN);
+        swipeRefresh.setColorSchemeResources(R.color.yellow);
 
         recyclerView.setNestedScrollingEnabled(false);
         toolbar.setTitle("Scanned Histories");
@@ -51,7 +59,8 @@ public class UserHistoryActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
             }
         });
         layoutManager = new LinearLayoutManager(this);
@@ -64,6 +73,7 @@ public class UserHistoryActivity extends AppCompatActivity {
                 refreshData();
             }
         });
+        Log.d("userling",user.getSocialLink());
         ApiInterface serviceDetail = ApiClient.getClient().create(ApiInterface.class);
         Call<List<Scanned>> callDetail = serviceDetail.getUserScanned(user.getSocialLink());
         callDetail.enqueue(new Callback<List<Scanned>>() {
@@ -110,5 +120,12 @@ public class UserHistoryActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
     }
 }

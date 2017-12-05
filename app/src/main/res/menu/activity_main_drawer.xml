@@ -13,7 +13,7 @@
         <item
             android:id="@+id/most_used"
             android:icon="@drawable/wallet_giftcard_white"
-            android:title="Most Used" />
+            android:title="Promotion" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/file_document_box"

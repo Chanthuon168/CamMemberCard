@@ -38,6 +38,7 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
     private Context context;
     private CollectionCard card;
     private User user;
+    private MemberCard memberCard;
 
     public AdapterMemberCard(Activity activity, List<MemberCard> members) {
         this.activity = activity;
@@ -57,30 +58,27 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
         Uri uri = Uri.parse(ApiClient.BASE_URL + members.get(position).getImgCard());
         context = holder.image.getContext();
         Picasso.with(context).load(uri).into(holder.image);
-        Uri uriProfile = Uri.parse(ApiClient.BASE_URL + members.get(position).getImgMerchandise());
-        context = holder.profile.getContext();
-        Picasso.with(context).load(uriProfile).into(holder.profile);
         holder.name.setText(members.get(position).getName());
-        holder.address.setText(members.get(position).getAddress());
         holder.ratingBar.setRating(Float.parseFloat(members.get(position).getRating()));
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                memberCard = members.get(position);
                 Intent intent = new Intent(activity, DetailActivity.class);
-                intent.putExtra("id", members.get(position).getId());
-                intent.putExtra("md_id", members.get(position).getMerId());
-                intent.putExtra("exp", members.get(position).getExpDate());
-                intent.putExtra("name", members.get(position).getName());
-                intent.putExtra("image_card", members.get(position).getImgCard());
-                intent.putExtra("logo", members.get(position).getImgMerchandise());
-                intent.putExtra("status", members.get(position).getStatus());
-                intent.putExtra("rating", members.get(position).getRating());
+                intent.putExtra("member", memberCard);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
 
-        holder.numUser.setText(members.get(position).getCount());
+        holder.numOutlet.setText(members.get(position).getOutlet());
+        if (members.get(position).getCount().equals("")) {
+            holder.numUser.setText("No used");
+        } else {
+            holder.numUser.setText(members.get(position).getCount() + " used");
+        }
+
         if (members.get(position).getStatus().equals("checked")) {
             holder.imgCard.setImageResource(R.drawable.new_gift);
         } else {
@@ -101,9 +99,9 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
                             holder.imgCard.setImageResource(R.drawable.new_gift);
                         }
                         if (card.getCount().equals("0")) {
-                            holder.numUser.setText("");
+                            holder.numUser.setText("No used");
                         } else {
-                            holder.numUser.setText(card.getCount());
+                            holder.numUser.setText(card.getCount() + " used");
                         }
                     }
 
@@ -123,19 +121,18 @@ public class AdapterMemberCard extends RecyclerView.Adapter<AdapterMemberCard.My
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
-        RoundedImageView profile, imgCard;
-        TextView name, address, numUser;
+        RoundedImageView imgCard;
+        TextView name, numUser, numOutlet;
         RatingBar ratingBar;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             imgCard = (RoundedImageView) itemView.findViewById(R.id.imgCard);
             image = (ImageView) itemView.findViewById(R.id.image_card);
-            profile = (RoundedImageView) itemView.findViewById(R.id.profile);
             name = (TextView) itemView.findViewById(R.id.name);
-            address = (TextView) itemView.findViewById(R.id.address);
             numUser = (TextView) itemView.findViewById(R.id.numUser);
             ratingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
+            numOutlet = (TextView) itemView.findViewById(R.id.numOutlet);
         }
     }
 }

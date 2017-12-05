@@ -15,31 +15,34 @@ import android.widget.TextView;
 import com.hammersmith.cammembercard.R;
 import com.hammersmith.cammembercard.RoundedImageView;
 import com.hammersmith.cammembercard.UserDetailActivity;
-import com.hammersmith.cammembercard.model.MostScanned;
 import com.hammersmith.cammembercard.model.Scanned;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by imac on 10/2/17.
  */
-public class AdapterMostScanned extends RecyclerView.Adapter<AdapterMostScanned.MyViewHolder> {
+public class AdapterPayment extends RecyclerView.Adapter<AdapterPayment.MyViewHolder> {
     private Context context;
     private Activity activity;
-    private List<MostScanned> scans;
+    private List<Scanned> scans;
+    private static String today;
 
 
-    public AdapterMostScanned(Activity activity, List<MostScanned> scans) {
+    public AdapterPayment(Activity activity, List<Scanned> scans) {
         this.activity = activity;
         this.scans = scans;
+        Calendar calendar = Calendar.getInstance();
+        today = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_people_using, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_using, parent, false);
         MyViewHolder myViewHolder = new MyViewHolder(view);
         return myViewHolder;
     }
@@ -50,17 +53,9 @@ public class AdapterMostScanned extends RecyclerView.Adapter<AdapterMostScanned.
         context = holder.profile.getContext();
         Picasso.with(context).load(uri).into(holder.profile);
         holder.name.setText(scans.get(position).getName());
-        holder.discount.setText(scans.get(position).getLastDiscount() + "% OFF");
-        holder.using_date.setText("Start using " + formatDate(scans.get(position).getCreateAt()));
+        holder.discount.setText(scans.get(position).getLastDiscount() + "% Off");
+        holder.using_date.setText(getTimeStamp(scans.get(position).getCreateAt()));
         holder.ratingBar.setRating(Float.parseFloat(scans.get(position).getRating()));
-        int num_scanned = Integer.parseInt(scans.get(position).getNumberScanned());
-        String time = "";
-        if (num_scanned > 1) {
-            time = " times";
-        } else {
-            time = " time";
-        }
-        holder.number_scanned.setText("Scanned " + num_scanned + time);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,7 +77,7 @@ public class AdapterMostScanned extends RecyclerView.Adapter<AdapterMostScanned.
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         RoundedImageView profile;
-        TextView name, discount, using_date, number_scanned;
+        TextView name, discount, using_date;
         RatingBar ratingBar;
 
         public MyViewHolder(View itemView) {
@@ -91,18 +86,22 @@ public class AdapterMostScanned extends RecyclerView.Adapter<AdapterMostScanned.
             name = (TextView) itemView.findViewById(R.id.name);
             discount = (TextView) itemView.findViewById(R.id.discount);
             using_date = (TextView) itemView.findViewById(R.id.using_date);
-            number_scanned = (TextView) itemView.findViewById(R.id.number_scanned);
             ratingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
         }
     }
 
-    public static String formatDate(String dateStr) {
+    public static String getTimeStamp(String dateStr) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String timestamp = "";
+
+        today = today.length() < 2 ? "0" + today : today;
+
         try {
             Date date = format.parse(dateStr);
-            SimpleDateFormat todayFormat = new SimpleDateFormat("dd MMM yyyy");
-            String date1 = todayFormat.format(date);
+            SimpleDateFormat todayFormat = new SimpleDateFormat("dd");
+            String dateToday = todayFormat.format(date);
+            format = dateToday.equals(today) ? new SimpleDateFormat("hh:mm a") : new SimpleDateFormat("dd LLL, hh:mm a");
+            String date1 = format.format(date);
             timestamp = date1.toString();
         } catch (ParseException e) {
             e.printStackTrace();

@@ -6,229 +6,177 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:elevation="5dp"
-        card_view:cardBackgroundColor="@android:color/white"
-        card_view:cardElevation="2dp">
+        android:layout_marginRight="5dp">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@color/divider_light"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@color/icons" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_horizontal|bottom"
-                        android:orientation="vertical">
-
-                        <com.hammersmith.cammembercard.RoundedImageView
-                            android:id="@+id/profile"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@color/divider"
-                            android:elevation="5dp"
-                            android:padding="2dp"
-                            android:scaleType="centerCrop"
-                            app:border_width="0dip"
-                            app:is_oval="true"
-                            app:round_background="true" />
-                    </LinearLayout>
-                </RelativeLayout>
-            </LinearLayout>
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/divider_light"
-                android:orientation="vertical">
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp">
 
-                <LinearLayout
-                    android:layout_marginTop="5dp"
+                <android.support.v7.widget.CardView
+                    android:id="@+id/card_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center">
-
-                    <RatingBar
-                        android:id="@+id/ratingBar"
-                        style="?android:attr/ratingBarStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:numStars="5"
-                        android:rating="0.0"
-                        android:stepSize="0.5" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/divider_light"
-                    android:clickable="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:weightSum="5">
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:elevation="5dp"
+                    card_view:cardBackgroundColor="@android:color/white"
+                    card_view:cardElevation="2dp">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1.3"
-                        android:orientation="vertical">
-
-                        <android.support.v7.widget.CardView
-                            android:layout_width="80dp"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center"
-                            android:layout_margin="05dp"
-                            android:elevation="5dp"
-                            app:cardCornerRadius="5dp"
-                            card_view:cardBackgroundColor="@android:color/white"
-                            card_view:cardElevation="2dp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                                <ImageView
-                                    android:id="@+id/image_card"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:scaleType="fitXY">
-
-                                </ImageView>
-                            </LinearLayout>
-                        </android.support.v7.widget.CardView>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:orientation="vertical"
-                        android:paddingLeft="5dp">
-
-                        <TextView
-                            android:id="@+id/name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Brown Coffe Cambodia"
-                            android:textColor="@color/primary_text"
-                            android:textSize="16sp" />
+                        android:orientation="horizontal"
+                        android:padding="10dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
+                            android:clickable="true"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
-                            <com.joanzapata.iconify.widget.IconTextView
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="{fa-map-marker}"
-                                android:textColor="@color/colorPrimary" />
+                                android:gravity="center_vertical"
+                                android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/address"
-                                android:layout_width="wrap_content"
+                                <android.support.v7.widget.CardView
+                                    android:layout_width="100dp"
+                                    android:layout_height="60dp"
+                                    android:elevation="5dp"
+                                    app:cardCornerRadius="5dp"
+                                    card_view:cardBackgroundColor="@android:color/white"
+                                    card_view:cardElevation="2dp">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+
+                                        <ImageView
+                                            android:id="@+id/image_card"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:scaleType="fitXY">
+
+                                        </ImageView>
+                                    </LinearLayout>
+                                </android.support.v7.widget.CardView>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
-                                android:text="Kampochea Krom"
-                                android:textColor="@color/secondary_text" />
+                                android:orientation="vertical"
+                                android:paddingLeft="5dp">
+
+                                <TextView
+                                    android:id="@+id/name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/primary_text"
+                                    android:textSize="16sp" />
+
+                                <RatingBar
+                                    android:id="@+id/ratingBar"
+                                    style="?android:attr/ratingBarStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:numStars="5"
+                                    android:rating="0.0"
+                                    android:stepSize="0.5" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:background="@drawable/bg_border_primary"
+                                        android:gravity="center|center_vertical"
+                                        android:orientation="horizontal"
+                                        android:paddingLeft="5dp"
+                                        android:paddingRight="5dp">
+
+                                        <TextView
+                                            android:id="@+id/numUser"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="@color/colorPrimary"
+                                            android:textSize="13sp" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="3dp"
+                                        android:background="@drawable/bg_border_outlet"
+                                        android:gravity="center|center_vertical"
+                                        android:orientation="horizontal"
+                                        android:paddingLeft="5dp"
+                                        android:paddingRight="5dp">
+
+                                        <TextView
+                                            android:id="@+id/numOutlet"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="@color/red_light"
+                                            android:textSize="13sp" />
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
                     </LinearLayout>
+                </android.support.v7.widget.CardView>
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.7"
-                        android:gravity="center_vertical|right"
-                        android:orientation="vertical">
-
-                        <com.hammersmith.cammembercard.RoundedImageView
-                            android:id="@+id/imgCard"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@color/divider"
-                            android:elevation="3dp"
-                            android:padding="1dp"
-                            android:src="@drawable/new_card"
-                            app:border_width="0dip"
-                            app:is_oval="true"
-                            app:round_background="true" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    android:paddingBottom="15dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_border_primary"
-                        android:gravity="center|center_vertical"
-                        android:minWidth="80dp"
-                        android:orientation="horizontal"
-                        android:paddingBottom="2dp"
-                        android:paddingLeft="7dp"
-                        android:paddingRight="7dp"
-                        android:paddingTop="2dp">
-
-                        <com.joanzapata.iconify.widget.IconTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="{fa-user}"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="13sp" />
-
-                        <TextView
-                            android:id="@+id/numUser"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="3dp"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="13sp" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:layout_marginTop="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.hammersmith.cammembercard.RoundedImageView
+                    android:id="@+id/imgCard"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/divider"
+                    android:elevation="3dp"
+                    android:padding="1dp"
+                    android:src="@drawable/new_card"
+                    app:border_width="0dip"
+                    app:is_oval="true"
+                    app:round_background="true" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
 
 
 </LinearLayout>

@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -13,10 +15,11 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         app:tabGravity="fill"
-        app:tabIndicatorColor="@color/icons"
+        app:tabIndicatorColor="@color/yellow"
+        app:tabIndicatorHeight="3dp"
         app:tabMode="fixed"
         app:tabSelectedTextColor="@color/icons"
-        app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
+        app:tabTextAppearance="@style/MineCustomTabText"
         app:tabTextColor="@color/primary_light" />
 
     <android.support.v4.view.ViewPager

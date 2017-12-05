@@ -1,6 +1,5 @@
 package com.hammersmith.cammembercard.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,10 +17,8 @@ import com.hammersmith.cammembercard.ApiClient;
 import com.hammersmith.cammembercard.ApiInterface;
 import com.hammersmith.cammembercard.PrefUtils;
 import com.hammersmith.cammembercard.R;
-import com.hammersmith.cammembercard.adapter.AdapterPeopleUsing;
 import com.hammersmith.cammembercard.adapter.AdapterTodayScanned;
-import com.hammersmith.cammembercard.model.Scanned;
-import com.hammersmith.cammembercard.model.TodayScanned;
+import com.hammersmith.cammembercard.model.Scan;
 import com.hammersmith.cammembercard.model.User;
 
 import java.util.ArrayList;
@@ -39,7 +36,7 @@ public class FragmentTodayScanned extends Fragment {
     private AdapterTodayScanned adapter;
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout swipeRefresh;
-    private List<TodayScanned> scans = new ArrayList<>();
+    private List<Scan> scans = new ArrayList<>();
     private int sizeScan;
     private User user;
     private LinearLayout lMessage;
@@ -51,7 +48,7 @@ public class FragmentTodayScanned extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_people_using, container, false);
+        View view = inflater.inflate(R.layout.fragment_using, container, false);
         user = PrefUtils.getCurrentUser(getActivity());
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -62,7 +59,7 @@ public class FragmentTodayScanned extends Fragment {
 
         swipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
         swipeRefresh.setRefreshing(true);
-        swipeRefresh.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN, Color.CYAN);
+        swipeRefresh.setColorSchemeResources(R.color.yellow);
 
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -72,10 +69,10 @@ public class FragmentTodayScanned extends Fragment {
         });
 
         ApiInterface serviceScan = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<TodayScanned>> scanCall = serviceScan.getUserTodayScan(user.getSocialLink());
-        scanCall.enqueue(new Callback<List<TodayScanned>>() {
+        Call<List<Scan>> scanCall = serviceScan.getUserTodayScan(user.getSocialLink());
+        scanCall.enqueue(new Callback<List<Scan>>() {
             @Override
-            public void onResponse(Call<List<TodayScanned>> call, Response<List<TodayScanned>> response) {
+            public void onResponse(Call<List<Scan>> call, Response<List<Scan>> response) {
                 scans = response.body();
                 swipeRefresh.setRefreshing(false);
                 if (scans.size() > 0) {
@@ -90,7 +87,7 @@ public class FragmentTodayScanned extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<TodayScanned>> call, Throwable t) {
+            public void onFailure(Call<List<Scan>> call, Throwable t) {
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -100,10 +97,10 @@ public class FragmentTodayScanned extends Fragment {
 
     private void refreshData() {
         ApiInterface serviceScan = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<TodayScanned>> scanCall = serviceScan.getUserTodayScan(user.getSocialLink());
-        scanCall.enqueue(new Callback<List<TodayScanned>>() {
+        Call<List<Scan>> scanCall = serviceScan.getUserTodayScan(user.getSocialLink());
+        scanCall.enqueue(new Callback<List<Scan>>() {
             @Override
-            public void onResponse(Call<List<TodayScanned>> call, Response<List<TodayScanned>> response) {
+            public void onResponse(Call<List<Scan>> call, Response<List<Scan>> response) {
                 scans = response.body();
                 swipeRefresh.setRefreshing(false);
                 if (scans != null) {
@@ -112,6 +109,9 @@ public class FragmentTodayScanned extends Fragment {
                         adapter = new AdapterTodayScanned(getActivity(), scans);
                         recyclerView.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
+                        if (sizeScan > 0){
+                            lMessage.setVisibility(View.GONE);
+                        }
                     }
                 } else {
                     lMessage.setVisibility(View.VISIBLE);
@@ -120,7 +120,7 @@ public class FragmentTodayScanned extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<TodayScanned>> call, Throwable t) {
+            public void onFailure(Call<List<Scan>> call, Throwable t) {
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

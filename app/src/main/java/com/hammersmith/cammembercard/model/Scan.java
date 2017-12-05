@@ -1,11 +1,14 @@
 package com.hammersmith.cammembercard.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.internal.Streams;
+
+import java.io.Serializable;
 
 /**
  * Created by imac on 13/2/17.
  */
-public class MostScanned {
+public class Scan implements Serializable {
     @SerializedName("id")
     private int id;
     @SerializedName("social_link")
@@ -26,6 +29,12 @@ public class MostScanned {
     private String email;
     @SerializedName("last_discount")
     private String lastDiscount;
+    @SerializedName("last_paid")
+    private String lastPaid;
+    @SerializedName("last_save")
+    private String lastSave;
+    @SerializedName("grand_total")
+    private String grandTotal;
     @SerializedName("created_at")
     private String createAt;
     @SerializedName("scanned")
@@ -33,10 +42,10 @@ public class MostScanned {
     @SerializedName("rating")
     private String rating;
 
-    public MostScanned() {
+    public Scan() {
     }
 
-    public MostScanned(String socialLink, String scannerLink, int merId, String discount, String createdAt) {
+    public Scan(String socialLink, String scannerLink, int merId, String discount, String createdAt) {
         this.socialLink = socialLink;
         this.scannerLink = scannerLink;
         this.merId = merId;
@@ -44,7 +53,15 @@ public class MostScanned {
         this.createAt = createdAt;
     }
 
-    public MostScanned(int merId) {
+    public String getGrandTotal() {
+        return grandTotal;
+    }
+
+    public void setGrandTotal(String grandTotal) {
+        this.grandTotal = grandTotal;
+    }
+
+    public Scan(int merId) {
         this.merId = merId;
     }
 
@@ -150,5 +167,21 @@ public class MostScanned {
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    public String getLastPaid() {
+        return lastPaid;
+    }
+
+    public void setLastPaid(String lastPaid) {
+        this.lastPaid = lastPaid;
+    }
+
+    public String getLastSave() {
+        return lastSave;
+    }
+
+    public void setLastSave(String lastSave) {
+        this.lastSave = lastSave;
     }
 }

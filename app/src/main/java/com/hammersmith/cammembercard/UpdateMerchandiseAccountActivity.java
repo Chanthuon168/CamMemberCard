@@ -38,6 +38,7 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class UpdateMerchandiseAccountActivity extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener {
     private Toolbar toolbar;
@@ -58,6 +59,11 @@ public class UpdateMerchandiseAccountActivity extends AppCompatActivity implemen
     private ProgressDialog mProgressDialog;
     private TextView resetPassword;
     private AlertDialog dialogResetPass;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +99,8 @@ public class UpdateMerchandiseAccountActivity extends AppCompatActivity implemen
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
             }
         });
 
@@ -360,11 +367,11 @@ public class UpdateMerchandiseAccountActivity extends AppCompatActivity implemen
             @Override
             public void onResponse(Call<Account> call, Response<Account> response) {
                 account = response.body();
-                if (account.getMsg().equals("uploaded_failed")){
+                if (account.getMsg().equals("uploaded_failed")) {
                     hideProgressDialog();
                     dialogSuccess("Error while uploading profile account", "Error");
-                }else{
-                    Log.d("userLink",userLink+"");
+                } else {
+                    Log.d("userLink", userLink + "");
                     String strPhoto = ApiClient.BASE_URL + "images/" + account.getMsg();
                     Log.d("strPhoto", strPhoto);
                     account = new Account(userLink, strPhoto, strName, strGender, strPhone, strCountry, strAddress, strDob);
@@ -406,6 +413,7 @@ public class UpdateMerchandiseAccountActivity extends AppCompatActivity implemen
             }
         });
     }
+
     private void dialogResetPassword() {
         LayoutInflater factory = LayoutInflater.from(this);
         final View viewDialog = factory.inflate(R.layout.layout_dialog_reset_password, null);
@@ -428,25 +436,26 @@ public class UpdateMerchandiseAccountActivity extends AppCompatActivity implemen
                 strCurrPass = edCurrPass.getText().toString();
                 strNewPass = edNewPass.getText().toString();
                 strConPass = edConPass.getText().toString();
-                if (!strCurrPass.equals("")){
-                    if (!strNewPass.equals("")){
+                if (!strCurrPass.equals("")) {
+                    if (!strNewPass.equals("")) {
                         if (!strNewPass.equals(strConPass)) {
                             dialogSuccess("Password is not match", "Close");
                         } else {
                             showProgressDialog("Password is resetting...");
                             resetPassword(userLink, strCurrPass, strNewPass);
                         }
-                    }else{
-                        dialogSuccess("New password must be not null","Close");
+                    } else {
+                        dialogSuccess("New password must be not null", "Close");
                     }
-                }else{
-                    dialogSuccess("Current password must be not null","Close");
+                } else {
+                    dialogSuccess("Current password must be not null", "Close");
                 }
             }
         });
 
         dialogResetPass.show();
     }
+
     private void resetPassword(String userLink, String currentPass, String newPass) {
         account = new Account(userLink, currentPass, newPass);
         ApiInterface serviceResetPass = ApiClient.getClient().create(ApiInterface.class);
@@ -471,5 +480,11 @@ public class UpdateMerchandiseAccountActivity extends AppCompatActivity implemen
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
     }
 }

@@ -33,9 +33,9 @@
             android:padding="20dp">
 
             <TextView
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Brown Coffee Kampuchea Krom"
                 android:textColor="@color/primary_text"
                 android:textSize="18sp" />
 
@@ -47,11 +47,11 @@
                 android:textColor="@color/primary_text" />
 
             <TextView
+                android:id="@+id/address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:lineSpacingExtra="7dp"
-                android:text="17, St. 214, Sangkat Beoung Rang, Khan Daun Penh. Phnom Penh. BROWN Coffee and Bakery distinguishes itself from the in Phnom Penh, Cambodia." />
+                android:lineSpacingExtra="7dp" />
 
         </LinearLayout>
 
@@ -73,12 +73,17 @@
                 android:textColor="@color/primary_text" />
 
             <TextView
+                android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Open today · 6:15 AM – 9:00 PM" />
+                android:layout_marginTop="10dp" />
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider_light" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -93,25 +98,36 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_map"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                    <com.joanzapata.iconify.widget.IconTextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/lMap"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="{fa-map-marker}"
-                        android:textColor="@color/icons"
-                        android:textSize="30sp" />
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:padding="5dp">
 
-                </LinearLayout>
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:src="@drawable/google_maps" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentRight="true"
+                        android:background="@color/divider" />
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -121,12 +137,34 @@
                 android:layout_weight="1"
                 android:gravity="center">
 
-                <com.joanzapata.iconify.widget.IconTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="{fa-facebook-official}"
-                    android:textColor="@color/facebook"
-                    android:textSize="40sp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:id="@+id/lFacebook"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:src="@drawable/facebook_box" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentRight="true"
+                        android:background="@color/divider" />
+
+                </RelativeLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -135,12 +173,33 @@
                 android:layout_weight="1"
                 android:gravity="center">
 
-                <com.joanzapata.iconify.widget.IconTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="{fa-phone-square}"
-                    android:textColor="@color/green"
-                    android:textSize="40sp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:id="@+id/lPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:src="@drawable/phone" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentRight="true"
+                        android:background="@color/divider" />
+
+                </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -149,12 +208,27 @@
                 android:layout_weight="1"
                 android:gravity="center">
 
-                <com.joanzapata.iconify.widget.IconTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="{fa-chrome}"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="40sp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:id="@+id/lChrome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:src="@drawable/web" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
             </LinearLayout>
 
         </LinearLayout>

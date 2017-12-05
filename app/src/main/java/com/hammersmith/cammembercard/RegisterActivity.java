@@ -1,6 +1,7 @@
 package com.hammersmith.cammembercard;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +47,7 @@ import java.util.regex.Pattern;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class RegisterActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
     private CallbackManager callbackManager;
@@ -56,6 +60,11 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     private String strName, strEmail, strPassword, strConfirmPassword, strPhoto;
     private View view;
     private ProgressDialog mProgressDialog;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +90,9 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 Toast.makeText(RegisterActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_register);
         view = findViewById(R.id.lRegister);
         findViewById(R.id.signIn).setOnClickListener(this);
@@ -205,7 +217,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         request.executeAsync();
     }
 
-    private void saveUserSocial(String name, String email, String photo, String socialLink, String socialType) {
+    private void saveUserSocial(final String name, final String email, String photo, final String socialLink, final String socialType) {
         showProgressDialog();
         user = new User(name, email, photo, socialLink, socialType);
         ApiInterface serviceUserLogin = ApiClient.getClient().create(ApiInterface.class);
@@ -216,6 +228,15 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 user = response.body();
                 if (user != null) {
                     if (user.getMsg().equals("success")) {
+                        String photo = user.getPhoto();
+                        user = new User();
+                        user.setName(name);
+                        user.setEmail(email);
+                        user.setSocialLink(socialLink);
+                        user.setPhoto(photo);
+                        user.setLoginAs("isUser");
+                        user.setSocialType(socialType);
+                        PrefUtils.setCurrentUser(user, RegisterActivity.this);
                         Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         startActivity(intent);

@@ -1,6 +1,7 @@
 package com.hammersmith.cammembercard;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 
 import com.hammersmith.cammembercard.adapter.AdapterCollection;
 import com.hammersmith.cammembercard.model.CollectionCard;
+import com.hammersmith.cammembercard.model.MemberCard;
 import com.hammersmith.cammembercard.model.User;
 
 import java.util.ArrayList;
@@ -22,18 +24,24 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class CollectionActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private AdapterCollection adapterCollection;
     private LinearLayoutManager layoutManager;
-    private List<CollectionCard> collections = new ArrayList<>();
+    private List<MemberCard> collections = new ArrayList<>();
     private SwipeRefreshLayout swipeRefresh;
     private ProgressDialog mProgressDialog;
     private int sizeMembership;
     private User user;
     private LinearLayout lNoFavorite;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +55,8 @@ public class CollectionActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
             }
         });
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
@@ -58,7 +67,7 @@ public class CollectionActivity extends AppCompatActivity {
         lNoFavorite = (LinearLayout)findViewById(R.id.lNoFavorite);
         recyclerView.setNestedScrollingEnabled(false);
         swipeRefresh.setRefreshing(true);
-        swipeRefresh.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN, Color.CYAN);
+        swipeRefresh.setColorSchemeResources(R.color.yellow);
         user = PrefUtils.getCurrentUser(this);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -67,10 +76,10 @@ public class CollectionActivity extends AppCompatActivity {
             }
         });
         ApiInterface serviceMembership = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<CollectionCard>> callMember = serviceMembership.getCollectionCard(user.getSocialLink());
-        callMember.enqueue(new Callback<List<CollectionCard>>() {
+        Call<List<MemberCard>> callMember = serviceMembership.getCollectionCard(user.getSocialLink());
+        callMember.enqueue(new Callback<List<MemberCard>>() {
             @Override
-            public void onResponse(Call<List<CollectionCard>> call, Response<List<CollectionCard>> response) {
+            public void onResponse(Call<List<MemberCard>> call, Response<List<MemberCard>> response) {
                 collections = response.body();
                 Log.d("collection", collections.toArray().toString());
                 swipeRefresh.setRefreshing(false);
@@ -87,7 +96,7 @@ public class CollectionActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<CollectionCard>> call, Throwable t) {
+            public void onFailure(Call<List<MemberCard>> call, Throwable t) {
 
             }
         });
@@ -95,10 +104,10 @@ public class CollectionActivity extends AppCompatActivity {
     }
     private void refreshData() {
         ApiInterface serviceMembership = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<CollectionCard>> callMember = serviceMembership.getCollectionCard(user.getSocialLink());
-        callMember.enqueue(new Callback<List<CollectionCard>>() {
+        Call<List<MemberCard>> callMember = serviceMembership.getCollectionCard(user.getSocialLink());
+        callMember.enqueue(new Callback<List<MemberCard>>() {
             @Override
-            public void onResponse(Call<List<CollectionCard>> call, Response<List<CollectionCard>> response) {
+            public void onResponse(Call<List<MemberCard>> call, Response<List<MemberCard>> response) {
                 collections = response.body();
                 Log.d("collection", collections.toArray().toString());
                 swipeRefresh.setRefreshing(false);
@@ -119,9 +128,15 @@ public class CollectionActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<CollectionCard>> call, Throwable t) {
+            public void onFailure(Call<List<MemberCard>> call, Throwable t) {
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
     }
 }

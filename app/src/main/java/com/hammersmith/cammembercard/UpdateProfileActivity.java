@@ -41,6 +41,7 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class UpdateProfileActivity extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener {
     private Toolbar toolbar;
@@ -62,6 +63,11 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
     private AlertDialog dialogResetPass;
 
     private ProgressDialog mProgressDialog;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +94,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
 
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         swipeRefresh.setRefreshing(true);
-        swipeRefresh.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN, Color.CYAN);
+        swipeRefresh.setColorSchemeResources(R.color.yellow);
 
         toolbar.setTitle("Update Account");
         setSupportActionBar(toolbar);
@@ -97,7 +103,8 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
             }
         });
 
@@ -254,7 +261,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                 Bitmap bitmap = PhotoLoader.init().from(photoPath).requestSize(512, 512).getBitmap();
                 profile.setImageBitmap(bitmap);
                 encoded = getEncoded64ImageStringFromBitmap(bitmap);
-
+//                Log.d("strBase64", encoded);
             } catch (FileNotFoundException e) {
                 Toast.makeText(getApplicationContext(), "Error while loading image", Toast.LENGTH_SHORT).show();
             }
@@ -433,19 +440,19 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                 strCurrPass = edCurrPass.getText().toString();
                 strNewPass = edNewPass.getText().toString();
                 strConPass = edConPass.getText().toString();
-                if (!strCurrPass.equals("")){
-                    if (!strNewPass.equals("")){
+                if (!strCurrPass.equals("")) {
+                    if (!strNewPass.equals("")) {
                         if (!strNewPass.equals(strConPass)) {
                             dialogSuccess("Password is not match", "Close");
                         } else {
                             showProgressDialog("Password is resetting");
                             resetPassword(userLink, strCurrPass, strNewPass);
                         }
-                    }else{
-                        dialogSuccess("New password must be not null","Close");
+                    } else {
+                        dialogSuccess("New password must be not null", "Close");
                     }
-                }else{
-                    dialogSuccess("Current password must be not null","Close");
+                } else {
+                    dialogSuccess("Current password must be not null", "Close");
                 }
             }
         });
@@ -477,5 +484,12 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
     }
 }

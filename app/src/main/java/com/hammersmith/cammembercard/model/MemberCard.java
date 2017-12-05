@@ -1,11 +1,15 @@
 package com.hammersmith.cammembercard.model;
 
+import android.icu.text.SymbolTable;
+
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 /**
  * Created by Chan Thuon on 11/22/2016.
  */
-public class MemberCard {
+public class MemberCard implements Serializable{
     @SerializedName("id")
     private int id;
     @SerializedName("md_id")
@@ -30,6 +34,8 @@ public class MemberCard {
     private String socialLink;
     @SerializedName("size_status")
     private String sizeStats;
+    @SerializedName("outlet")
+    private String outlet;
 
     public MemberCard() {
     }
@@ -132,5 +138,13 @@ public class MemberCard {
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    public String getOutlet() {
+        return outlet;
+    }
+
+    public void setOutlet(String outlet) {
+        this.outlet = outlet;
     }
 }

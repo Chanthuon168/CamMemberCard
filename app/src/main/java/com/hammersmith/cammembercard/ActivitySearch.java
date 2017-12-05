@@ -1,6 +1,7 @@
 package com.hammersmith.cammembercard;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ActivitySearch extends AppCompatActivity {
     private Toolbar toolbar;
@@ -38,6 +40,11 @@ public class ActivitySearch extends AppCompatActivity {
     private LinearLayoutManager layoutManager;
     private List<MemberCard> members = new ArrayList<>();
     private User user;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +64,8 @@ public class ActivitySearch extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
             }
         });
         clearText.setOnClickListener(new View.OnClickListener() {
@@ -67,44 +75,51 @@ public class ActivitySearch extends AppCompatActivity {
             }
         });
 
+        str_search = getIntent().getStringExtra("name");
+
+        filterCard(str_search);
+
         editText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     str_search = editText.getText().toString();
-//                    str_search = str_search.replaceAll(" ", "_").toLowerCase();
-                    showProgressDialog();
-                    ApiInterface serviceFilter = ApiClient.getClient().create(ApiInterface.class);
-                    Call<List<MemberCard>> callFilter = serviceFilter.filterByName(user.getSocialLink(),str_search);
-                    callFilter.enqueue(new Callback<List<MemberCard>>() {
-                        @Override
-                        public void onResponse(Call<List<MemberCard>> call, Response<List<MemberCard>> response) {
-                            members = response.body();
-                            hideProgressDialog();
-                            if (members.size() < 1){
-                                findViewById(R.id.txtFilter).setVisibility(View.VISIBLE);
-                                adapter = new AdapterMemberCard(ActivitySearch.this, members);
-                                recyclerView.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                            }else{
-                                findViewById(R.id.txtFilter).setVisibility(View.GONE);
-                                adapter = new AdapterMemberCard(ActivitySearch.this, members);
-                                recyclerView.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<List<MemberCard>> call, Throwable t) {
-
-                        }
-                    });
+                    filterCard(str_search);
                     return true;
                 }
                 return false;
             }
         });
 
+    }
+
+    private void filterCard(String str_search) {
+        showProgressDialog();
+        ApiInterface serviceFilter = ApiClient.getClient().create(ApiInterface.class);
+        Call<List<MemberCard>> callFilter = serviceFilter.filterByName(user.getSocialLink(),str_search);
+        callFilter.enqueue(new Callback<List<MemberCard>>() {
+            @Override
+            public void onResponse(Call<List<MemberCard>> call, Response<List<MemberCard>> response) {
+                members = response.body();
+                hideProgressDialog();
+                if (members.size() < 1){
+                    findViewById(R.id.txtFilter).setVisibility(View.VISIBLE);
+                    adapter = new AdapterMemberCard(ActivitySearch.this, members);
+                    recyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }else{
+                    findViewById(R.id.txtFilter).setVisibility(View.GONE);
+                    adapter = new AdapterMemberCard(ActivitySearch.this, members);
+                    recyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<MemberCard>> call, Throwable t) {
+
+            }
+        });
     }
 
     private void showProgressDialog() {
@@ -137,5 +152,11 @@ public class ActivitySearch extends AppCompatActivity {
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
     }
 }

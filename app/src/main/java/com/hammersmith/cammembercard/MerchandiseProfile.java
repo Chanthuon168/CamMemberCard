@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MerchandiseProfile extends AppCompatActivity implements View.OnClickListener {
     private Toolbar toolbar;
@@ -29,6 +30,11 @@ public class MerchandiseProfile extends AppCompatActivity implements View.OnClic
     private SwipeRefreshLayout swipeRefresh;
     private RatingBar ratingBar;
     private Merchandise merchandise;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +76,8 @@ public class MerchandiseProfile extends AppCompatActivity implements View.OnClic
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
             }
         });
 
@@ -102,7 +109,7 @@ public class MerchandiseProfile extends AppCompatActivity implements View.OnClic
                     mer_email.setText(merchandise.getMerEmail());
                     mer_address.setText(merchandise.getMerAddress());
                     numUserScan.setText("" + merchandise.getUserScan());
-                    copyright.setText("2017 "+merchandise.getMerName()+" Co.Ltd. All right reserved.");
+                    copyright.setText("2017 " + merchandise.getMerName() + " Co.Ltd. All right reserved.");
                     website.setText(merchandise.getWebsite());
                     if (merchandise.getMerContactAlternate().equals("")) {
                         mer_contact.setText(merchandise.getMerContact());
@@ -126,5 +133,11 @@ public class MerchandiseProfile extends AppCompatActivity implements View.OnClic
                 startActivity(new Intent(MerchandiseProfile.this, UpdateMerchandiseAccountActivity.class));
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
     }
 }

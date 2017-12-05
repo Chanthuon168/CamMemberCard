@@ -35,12 +35,13 @@ import retrofit2.Response;
  */
 public class AdapterCollection extends RecyclerView.Adapter<AdapterCollection.MyViewHolder> {
     private Activity activity;
-    private List<CollectionCard> collections;
+    private List<MemberCard> collections;
     private Context context;
     private CollectionCard card;
     private User user;
+    private MemberCard memberCard;
 
-    public AdapterCollection(Activity activity, List<CollectionCard> collections) {
+    public AdapterCollection(Activity activity, List<MemberCard> collections) {
         this.activity = activity;
         this.collections = collections;
         user = PrefUtils.getCurrentUser(activity);
@@ -59,30 +60,21 @@ public class AdapterCollection extends RecyclerView.Adapter<AdapterCollection.My
             Uri uri = Uri.parse(ApiClient.BASE_URL + collections.get(position).getImgCard());
             context = holder.image.getContext();
             Picasso.with(context).load(uri).into(holder.image);
-            Uri uriProfile = Uri.parse(ApiClient.BASE_URL + collections.get(position).getImgMerchandise());
-            context = holder.profile.getContext();
-            Picasso.with(context).load(uriProfile).into(holder.profile);
             holder.name.setText(collections.get(position).getName());
-            holder.address.setText(collections.get(position).getAddress());
             holder.ratingBar.setRating(Float.parseFloat(collections.get(position).getRating()));
             holder.image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    memberCard = collections.get(position);
                     Intent intent = new Intent(activity, DetailActivity.class);
-                    intent.putExtra("id", collections.get(position).getId());
-                    intent.putExtra("md_id", collections.get(position).getMerId());
-                    intent.putExtra("exp", collections.get(position).getExpDate());
-                    intent.putExtra("name", collections.get(position).getName());
-                    intent.putExtra("image_card", collections.get(position).getImgCard());
-                    intent.putExtra("logo", collections.get(position).getImgMerchandise());
-                    intent.putExtra("status", collections.get(position).getStatus());
-                    intent.putExtra("rating", collections.get(position).getRating());
+                    intent.putExtra("member", memberCard);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     activity.startActivity(intent);
+                    activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }
             });
-
-            holder.numUser.setText(collections.get(position).getCount());
+            holder.numOutlet.setText(collections.get(position).getOutlet());
+            holder.numUser.setText(collections.get(position).getCount() + " used");
             if (collections.get(position).getStatus().equals("checked")) {
                 holder.imgCard.setImageResource(R.drawable.new_gift);
             } else {
@@ -103,9 +95,9 @@ public class AdapterCollection extends RecyclerView.Adapter<AdapterCollection.My
                                 holder.imgCard.setImageResource(R.drawable.new_gift);
                             }
                             if (card.getCount().equals("0")) {
-                                holder.numUser.setText("");
+                                holder.numUser.setText("No used");
                             } else {
-                                holder.numUser.setText(card.getCount());
+                                holder.numUser.setText(card.getCount() + " used");
                             }
                         }
 
@@ -126,19 +118,18 @@ public class AdapterCollection extends RecyclerView.Adapter<AdapterCollection.My
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
-        RoundedImageView profile, imgCard;
-        TextView name, address, numUser;
+        RoundedImageView imgCard;
+        TextView name, numUser, numOutlet;
         RatingBar ratingBar;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             imgCard = (RoundedImageView) itemView.findViewById(R.id.imgCard);
             image = (ImageView) itemView.findViewById(R.id.image_card);
-            profile = (RoundedImageView) itemView.findViewById(R.id.profile);
             name = (TextView) itemView.findViewById(R.id.name);
-            address = (TextView) itemView.findViewById(R.id.address);
             numUser = (TextView) itemView.findViewById(R.id.numUser);
             ratingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
+            numOutlet = (TextView) itemView.findViewById(R.id.numOutlet);
         }
     }
 }

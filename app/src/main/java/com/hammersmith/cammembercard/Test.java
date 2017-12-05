@@ -1,64 +1,57 @@
-package com.hammersmith.cammembercard.fragment;
+package com.hammersmith.cammembercard;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 
-import com.hammersmith.cammembercard.R;
+import com.hammersmith.cammembercard.fragment.FragmentCollection;
+import com.hammersmith.cammembercard.fragment.FragmentMemberCard;
+import com.hammersmith.cammembercard.fragment.FragmentPromotion;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by imac on 10/2/17.
- */
-public class FragmentHomeMerchandise extends Fragment {
-    private Context context;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+public class Test extends AppCompatActivity {
+
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private int[] tabIcons = {
-            R.drawable.account_multiple_merchandise,
-            R.drawable.account_box,
-            R.drawable.account_card_details
-    };
 
-    public FragmentHomeMerchandise() {
-
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.content_main, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_test);
 
-        viewPager = (ViewPager) view.findViewById(R.id.pager);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
         setupViewPager(viewPager);
-
-        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-        setupTabIcons();
-        return view;
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new FragmentPeopleUsing(), "People Using");
-        adapter.addFragment(new FragmentMostScanned(), "Most Used");
-        adapter.addFragment(new FragmentTodayScanned(), "Scan Today");
+        Test.ViewPagerAdapter adapter = new Test.ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new FragmentMemberCard(), "BREAKFAST");
+        adapter.addFragment(new FragmentCollection(), "LUNCH & DINNER");
+        int limit = (adapter.getCount() > 1 ? adapter.getCount() - 1 : 1);
         viewPager.setAdapter(adapter);
-    }
-
-    private void setupTabIcons() {
-        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+        viewPager.setOffscreenPageLimit(limit);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -90,4 +83,5 @@ public class FragmentHomeMerchandise extends Fragment {
 //            return null;
         }
     }
+
 }

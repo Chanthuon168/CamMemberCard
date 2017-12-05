@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
     private Toolbar toolbar;
@@ -29,6 +30,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private TextView name, email, memId, gender, dateOfBirth, contact, address, country, numCard, point, numScan;
     private SwipeRefreshLayout swipeRefresh;
     private RatingBar ratingBar;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +58,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         swipeRefresh.setRefreshing(true);
-        swipeRefresh.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN, Color.CYAN);
+        swipeRefresh.setColorSchemeResources(R.color.yellow);
         findViewById(R.id.lEdit).setOnClickListener(this);
         toolbar.setTitle("Profile");
         setSupportActionBar(toolbar);
@@ -61,7 +67,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
             }
         });
         userSocial = new User(user.getSocialLink());
@@ -104,5 +111,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 startActivity(new Intent(ProfileActivity.this, UpdateProfileActivity.class));
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
     }
 }

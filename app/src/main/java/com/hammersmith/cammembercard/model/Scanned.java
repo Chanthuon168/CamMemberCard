@@ -26,22 +26,79 @@ public class Scanned {
     private String email;
     @SerializedName("last_discount")
     private String lastDiscount;
+    @SerializedName("last_paid")
+    private String lastPaid;
+    @SerializedName("last_save")
+    private String lastSave;
     @SerializedName("created_at")
     private String createAt;
     @SerializedName("scanned")
     private String numberScanned;
     @SerializedName("rating")
     private String rating;
+    @SerializedName("amount")
+    private String amount;
+    @SerializedName("status")
+    private String status;
+    @SerializedName("paid")
+    private String paid;
+    @SerializedName("save")
+    private String save;
+    @SerializedName("sub_total")
+    private String subTotal;
+    @SerializedName("grand_total")
+    private String grandTotal;
 
     public Scanned() {
     }
 
-    public Scanned(String socialLink, String scannerLink, int merId, String discount, String createdAt) {
+    public Scanned(String amount, String socialLink, String scannerLink, int merId, String discount, String createdAt) {
+        this.amount = amount;
         this.socialLink = socialLink;
         this.scannerLink = scannerLink;
         this.merId = merId;
         this.discount = discount;
         this.createAt = createdAt;
+    }
+
+    public String getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(String subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public String getGrandTotal() {
+        return grandTotal;
+    }
+
+    public void setGrandTotal(String grandTotal) {
+        this.grandTotal = grandTotal;
+    }
+
+    public String getLastPaid() {
+        return lastPaid;
+    }
+
+    public void setLastPaid(String lastPaid) {
+        this.lastPaid = lastPaid;
+    }
+
+    public String getLastSave() {
+        return lastSave;
+    }
+
+    public void setLastSave(String lastSave) {
+        this.lastSave = lastSave;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
     }
 
     public Scanned(int merId) {
@@ -150,5 +207,29 @@ public class Scanned {
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getPaid() {
+        return paid;
+    }
+
+    public void setPaid(String paid) {
+        this.paid = paid;
+    }
+
+    public String getSave() {
+        return save;
+    }
+
+    public void setSave(String save) {
+        this.save = save;
     }
 }

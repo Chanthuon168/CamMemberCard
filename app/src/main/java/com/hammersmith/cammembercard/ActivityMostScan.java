@@ -1,5 +1,6 @@
 package com.hammersmith.cammembercard;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -12,8 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hammersmith.cammembercard.adapter.AdapterMostScanned;
-import com.hammersmith.cammembercard.model.MostScanned;
+import com.hammersmith.cammembercard.adapter.AdapterUsing;
+import com.hammersmith.cammembercard.model.Scan;
 import com.hammersmith.cammembercard.model.User;
 
 import java.util.ArrayList;
@@ -22,18 +23,24 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ActivityMostScan extends AppCompatActivity {
     private Toolbar toolbar;
     private RecyclerView recyclerView;
-    private AdapterMostScanned adapter;
+    private AdapterUsing adapter;
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout swipeRefresh;
-    private List<MostScanned> scans = new ArrayList<>();
+    private List<Scan> scans = new ArrayList<>();
     private int sizeScan;
     private User user;
     private LinearLayout lMessage;
     private TextView txtMessage;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +54,8 @@ public class ActivityMostScan extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
             }
         });
         user = PrefUtils.getCurrentUser(ActivityMostScan.this);
@@ -70,15 +78,15 @@ public class ActivityMostScan extends AppCompatActivity {
         });
 
         ApiInterface serviceScan = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<MostScanned>> scanCall = serviceScan.getUserMostScan(user.getSocialLink());
-        scanCall.enqueue(new Callback<List<MostScanned>>() {
+        Call<List<Scan>> scanCall = serviceScan.getUserMostScan(user.getSocialLink());
+        scanCall.enqueue(new Callback<List<Scan>>() {
             @Override
-            public void onResponse(Call<List<MostScanned>> call, Response<List<MostScanned>> response) {
+            public void onResponse(Call<List<Scan>> call, Response<List<Scan>> response) {
                 scans = response.body();
                 swipeRefresh.setRefreshing(false);
                 if (scans .size() > 0) {
                     sizeScan = scans.size();
-                    adapter = new AdapterMostScanned(ActivityMostScan.this, scans);
+                    adapter = new AdapterUsing(ActivityMostScan.this, scans);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                 } else {
@@ -88,7 +96,7 @@ public class ActivityMostScan extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<MostScanned>> call, Throwable t) {
+            public void onFailure(Call<List<Scan>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -96,16 +104,16 @@ public class ActivityMostScan extends AppCompatActivity {
 
     private void refreshData() {
         ApiInterface serviceScan = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<MostScanned>> scanCall = serviceScan.getUserMostScan(user.getSocialLink());
-        scanCall.enqueue(new Callback<List<MostScanned>>() {
+        Call<List<Scan>> scanCall = serviceScan.getUserMostScan(user.getSocialLink());
+        scanCall.enqueue(new Callback<List<Scan>>() {
             @Override
-            public void onResponse(Call<List<MostScanned>> call, Response<List<MostScanned>> response) {
+            public void onResponse(Call<List<Scan>> call, Response<List<Scan>> response) {
                 scans = response.body();
                 swipeRefresh.setRefreshing(false);
                 if (scans != null) {
                     if (sizeScan != scans.size()) {
                         sizeScan = scans.size();
-                        adapter = new AdapterMostScanned(ActivityMostScan.this, scans);
+                        adapter = new AdapterUsing(ActivityMostScan.this, scans);
                         recyclerView.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
                     }
@@ -116,9 +124,15 @@ public class ActivityMostScan extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<MostScanned>> call, Throwable t) {
+            public void onFailure(Call<List<Scan>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
     }
 }

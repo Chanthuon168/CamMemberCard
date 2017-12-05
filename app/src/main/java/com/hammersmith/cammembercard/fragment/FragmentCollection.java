@@ -38,7 +38,7 @@ public class FragmentCollection extends Fragment {
     private RecyclerView recyclerView;
     private AdapterCollection adapterCollection;
     private LinearLayoutManager layoutManager;
-    private List<CollectionCard> collections = new ArrayList<>();
+    private List<MemberCard> collections = new ArrayList<>();
     private SwipeRefreshLayout swipeRefresh;
     private ProgressDialog mProgressDialog;
     private int sizeMembership;
@@ -62,7 +62,7 @@ public class FragmentCollection extends Fragment {
         lNoFavorite = (LinearLayout) view.findViewById(R.id.lNoFavorite);
         recyclerView.setNestedScrollingEnabled(false);
         swipeRefresh.setRefreshing(true);
-        swipeRefresh.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN, Color.CYAN);
+        swipeRefresh.setColorSchemeResources(R.color.yellow);
 
         user = PrefUtils.getCurrentUser(getActivity());
         Log.d("userId", user.getSocialLink());
@@ -75,10 +75,10 @@ public class FragmentCollection extends Fragment {
         });
 
         ApiInterface serviceMembership = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<CollectionCard>> callMember = serviceMembership.getCollectionCard(user.getSocialLink());
-        callMember.enqueue(new Callback<List<CollectionCard>>() {
+        Call<List<MemberCard>> callMember = serviceMembership.getCollectionCard(user.getSocialLink());
+        callMember.enqueue(new Callback<List<MemberCard>>() {
             @Override
-            public void onResponse(Call<List<CollectionCard>> call, Response<List<CollectionCard>> response) {
+            public void onResponse(Call<List<MemberCard>> call, Response<List<MemberCard>> response) {
                 collections = response.body();
                 Log.d("collection", collections.toArray().toString());
                 swipeRefresh.setRefreshing(false);
@@ -96,7 +96,7 @@ public class FragmentCollection extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<CollectionCard>> call, Throwable t) {
+            public void onFailure(Call<List<MemberCard>> call, Throwable t) {
 
             }
         });
@@ -107,10 +107,10 @@ public class FragmentCollection extends Fragment {
 
     private void refreshData() {
         ApiInterface serviceMembership = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<CollectionCard>> callMember = serviceMembership.getCollectionCard(user.getSocialLink());
-        callMember.enqueue(new Callback<List<CollectionCard>>() {
+        Call<List<MemberCard>> callMember = serviceMembership.getCollectionCard(user.getSocialLink());
+        callMember.enqueue(new Callback<List<MemberCard>>() {
             @Override
-            public void onResponse(Call<List<CollectionCard>> call, Response<List<CollectionCard>> response) {
+            public void onResponse(Call<List<MemberCard>> call, Response<List<MemberCard>> response) {
                 collections = response.body();
                 Log.d("collection", collections.toArray().toString());
                 hideProgressDialog();
@@ -132,7 +132,7 @@ public class FragmentCollection extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<CollectionCard>> call, Throwable t) {
+            public void onFailure(Call<List<MemberCard>> call, Throwable t) {
 
             }
         });

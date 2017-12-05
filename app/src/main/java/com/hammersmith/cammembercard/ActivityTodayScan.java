@@ -1,5 +1,6 @@
 package com.hammersmith.cammembercard;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hammersmith.cammembercard.adapter.AdapterTodayScanned;
-import com.hammersmith.cammembercard.model.TodayScanned;
+import com.hammersmith.cammembercard.model.Scan;
 import com.hammersmith.cammembercard.model.User;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ActivityTodayScan extends AppCompatActivity {
     private Toolbar toolbar;
@@ -29,11 +31,16 @@ public class ActivityTodayScan extends AppCompatActivity {
     private AdapterTodayScanned adapter;
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout swipeRefresh;
-    private List<TodayScanned> scans = new ArrayList<>();
+    private List<Scan> scans = new ArrayList<>();
     private int sizeScan;
     private User user;
     private LinearLayout lMessage;
     private TextView txtMessage;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +54,8 @@ public class ActivityTodayScan extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
             }
         });
 
@@ -71,10 +79,10 @@ public class ActivityTodayScan extends AppCompatActivity {
         });
 
         ApiInterface serviceScan = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<TodayScanned>> scanCall = serviceScan.getUserTodayScan(user.getSocialLink());
-        scanCall.enqueue(new Callback<List<TodayScanned>>() {
+        Call<List<Scan>> scanCall = serviceScan.getUserTodayScan(user.getSocialLink());
+        scanCall.enqueue(new Callback<List<Scan>>() {
             @Override
-            public void onResponse(Call<List<TodayScanned>> call, Response<List<TodayScanned>> response) {
+            public void onResponse(Call<List<Scan>> call, Response<List<Scan>> response) {
                 scans = response.body();
                 swipeRefresh.setRefreshing(false);
                 if (scans.size() > 0) {
@@ -89,17 +97,17 @@ public class ActivityTodayScan extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<TodayScanned>> call, Throwable t) {
+            public void onFailure(Call<List<Scan>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
     private void refreshData() {
         ApiInterface serviceScan = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<TodayScanned>> scanCall = serviceScan.getUserTodayScan(user.getSocialLink());
-        scanCall.enqueue(new Callback<List<TodayScanned>>() {
+        Call<List<Scan>> scanCall = serviceScan.getUserTodayScan(user.getSocialLink());
+        scanCall.enqueue(new Callback<List<Scan>>() {
             @Override
-            public void onResponse(Call<List<TodayScanned>> call, Response<List<TodayScanned>> response) {
+            public void onResponse(Call<List<Scan>> call, Response<List<Scan>> response) {
                 scans = response.body();
                 swipeRefresh.setRefreshing(false);
                 if (scans != null) {
@@ -116,9 +124,15 @@ public class ActivityTodayScan extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<TodayScanned>> call, Throwable t) {
+            public void onFailure(Call<List<Scan>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
     }
 }

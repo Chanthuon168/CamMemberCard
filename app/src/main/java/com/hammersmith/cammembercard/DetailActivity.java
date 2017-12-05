@@ -1,6 +1,8 @@
 package com.hammersmith.cammembercard;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -11,14 +13,19 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hammersmith.cammembercard.adapter.AdapterDiscount;
 import com.hammersmith.cammembercard.fragment.FragmentAlbum;
@@ -28,6 +35,7 @@ import com.hammersmith.cammembercard.fragment.FragmentOutlet;
 import com.hammersmith.cammembercard.fragment.FragmentReview;
 import com.hammersmith.cammembercard.model.CollectionCard;
 import com.hammersmith.cammembercard.model.Discount;
+import com.hammersmith.cammembercard.model.MemberCard;
 import com.hammersmith.cammembercard.model.User;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
@@ -38,8 +46,11 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.hammersmith.cammembercard.R.id.image_card;
+import static com.hammersmith.cammembercard.R.id.memId;
+import static com.hammersmith.cammembercard.R.id.merName;
 
 public class DetailActivity extends AppCompatActivity {
     private Context context;
@@ -63,43 +74,55 @@ public class DetailActivity extends AppCompatActivity {
     private String strDiscount;
     private Discount discount;
     private String strRating;
+    private MemberCard mMember;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_detail);
         expDate = (TextView) findViewById(R.id.expDate);
         name = (TextView) findViewById(R.id.name);
         image = (ImageView) findViewById(R.id.image);
         user = PrefUtils.getCurrentUser(getApplicationContext());
-        if (getIntent() != null) {
-            id = getIntent().getIntExtra("id", 0);
-            mdId = getIntent().getIntExtra("md_id", 0);
-            Log.d("md_id",mdId+"");
-            strExpDate = getIntent().getStringExtra("exp");
-            strName = getIntent().getStringExtra("name");
-            strImgCard = getIntent().getStringExtra("image_card");
-            strLogo = getIntent().getStringExtra("logo");
-            strStatus = getIntent().getStringExtra("status");
-            strRating = getIntent().getStringExtra("rating");
+
+        Intent intent = getIntent();
+        mMember = (MemberCard) intent.getSerializableExtra("member");
+        if (mMember != null) {
+            id = mMember.getId();
+            mdId = mMember.getMerId();
+            strExpDate = mMember.getExpDate();
+            strName = mMember.getName();
+            strImgCard = mMember.getImgCard();
+            strLogo = mMember.getImgMerchandise();
+            strStatus = mMember.getStatus();
+            strRating = mMember.getRating();
             expDate.setText("EXP. " + strExpDate);
             name.setText(strName);
             Uri uri = Uri.parse(ApiClient.BASE_URL + strImgCard);
             context = image.getContext();
             Picasso.with(context).load(uri).into(image);
         }
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (strStatus.equals("checked")){
-            fab.setImageResource(R.drawable.img_gift);
-            dialogDiscount();
+        if (strStatus.equals("checked")) {
+            fab.setImageResource(R.drawable.new_gift);
+//            dialogDiscount();
         } else {
-            fab.setImageResource(R.drawable.member_card);
+            fab.setImageResource(R.drawable.new_card);
         }
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (strStatus.equals("checked")){
-                    fab.setImageResource(R.drawable.img_gift);
+                if (strStatus.equals("checked")) {
+                    fab.setImageResource(R.drawable.new_gift);
                     dialogDiscount();
                 } else {
                     card = new CollectionCard(user.getSocialLink(), id);
@@ -110,7 +133,7 @@ public class DetailActivity extends AppCompatActivity {
                         public void onResponse(Call<CollectionCard> call, Response<CollectionCard> response) {
                             card = response.body();
                             if (card.getStatus().equals("checked")) {
-                                fab.setImageResource(R.drawable.img_gift);
+                                fab.setImageResource(R.drawable.new_gift);
                                 dialogDiscount();
                             }
                         }
@@ -126,7 +149,8 @@ public class DetailActivity extends AppCompatActivity {
         findViewById(R.id.arrow_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
             }
         });
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -135,6 +159,7 @@ public class DetailActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
+        changeTabsFont(tabLayout, "fonts/century_gothic.ttf");
 
     }
 
@@ -151,7 +176,9 @@ public class DetailActivity extends AppCompatActivity {
         adapter.addFragment(new FragmentCondition(), "T & C");
         adapter.addFragment(new FragmentOutlet(), "Outlet");
         adapter.addFragment(new FragmentReview(), "Reviews");
+        int limit = (adapter.getCount() > 1 ? adapter.getCount() - 1 : 1);
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(limit);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -207,7 +234,7 @@ public class DetailActivity extends AppCompatActivity {
         GridLayoutManager layoutManager = new GridLayoutManager(DetailActivity.this, 3);
         recyclerView.setLayoutManager(layoutManager);
         ApiInterface serviceDiscount = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<Discount>> callDiscount = serviceDiscount.getDiscount(mdId,user.getSocialLink());
+        Call<List<Discount>> callDiscount = serviceDiscount.getDiscount(mdId, user.getSocialLink());
         callDiscount.enqueue(new Callback<List<Discount>>() {
             @Override
             public void onResponse(Call<List<Discount>> call, Response<List<Discount>> response) {
@@ -237,7 +264,31 @@ public class DetailActivity extends AppCompatActivity {
     public int getMyData() {
         return id;
     }
-    public void closeDialog(){
+
+    public void closeDialog() {
         dialog.dismiss();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
+    }
+    public void changeTabsFont(TabLayout tabLayout, String fontPath) {
+        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+        int tabsCount = vg.getChildCount();
+        for (int j = 0; j < tabsCount; j++) {
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
+            int tabChildsCount = vgTab.getChildCount();
+            for (int i = 0; i < tabChildsCount; i++) {
+                View tabViewChild = vgTab.getChildAt(i);
+                if (tabViewChild instanceof AppCompatTextView) {
+                    Typeface type = Typeface.createFromAsset(getAssets(), fontPath);
+                    TextView viewChild = (TextView) tabViewChild;
+                    viewChild.setTypeface(type);
+                    viewChild.setAllCaps(false);
+                }
+            }
+        }
     }
 }

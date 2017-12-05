@@ -1,5 +1,6 @@
 package com.hammersmith.cammembercard;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,21 +11,21 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.hammersmith.cammembercard.adapter.AdapterPeopleUsing;
 import com.hammersmith.cammembercard.model.Merchandise;
 import com.hammersmith.cammembercard.model.Scanned;
 import com.hammersmith.cammembercard.model.User;
@@ -34,13 +35,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ScanQRCodeActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -51,11 +51,18 @@ public class ScanQRCodeActivity extends AppCompatActivity {
     private TextView name;
     private Context context;
     private NestedScrollView mainBody;
-    private ImageView imgScan;
+    private LinearLayout lScan;
     private SwipeRefreshLayout swipeRefresh;
     private Scanned scan;
     private String currentDateTime;
     private RatingBar ratingBar;
+    private EditText amount;
+    private ProgressDialog mProgressDialog;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +75,7 @@ public class ScanQRCodeActivity extends AppCompatActivity {
         name = (TextView) findViewById(R.id.name);
         mainBody = (NestedScrollView) findViewById(R.id.mainBody);
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        currentDateTime = dateFormat.format(new Date());
+        amount = (EditText) findViewById(R.id.amount);
 
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         swipeRefresh.setRefreshing(true);
@@ -83,29 +88,29 @@ public class ScanQRCodeActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
             }
         });
 
-        imgScan = (ImageView) findViewById(R.id.imgScan);
-        imgScan.setOnClickListener(new View.OnClickListener() {
+        lScan = (LinearLayout) findViewById(R.id.lScan);
+        lScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                txtDiscount.setText("");
-                IntentIntegrator integrator = new IntentIntegrator(ScanQRCodeActivity.this);
-                integrator.setPrompt("Please QR Code inside the viewfinder rectangle");
-                integrator.setOrientationLocked(false);
-                integrator.initiateScan();
+                if (amount.getText().toString().equals("")) {
+                    dialogExit("Please enter sub total (USD)");
+                } else {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    currentDateTime = dateFormat.format(new Date());
+                    txtDiscount.setText("");
+                    IntentIntegrator integrator = new IntentIntegrator(ScanQRCodeActivity.this);
+                    integrator.setPrompt("Please QR Code inside the viewfinder rectangle");
+                    integrator.setOrientationLocked(false);
+                    integrator.initiateScan();
+                    showProgressDialog();
+                }
             }
         });
-
-//        IntentIntegrator integrator = new IntentIntegrator(this);
-//        integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
-//        integrator.setPrompt("Scan a barcode");
-//        integrator.setCameraId(0);  // Use a specific camera of the device
-//        integrator.setBeepEnabled(false);
-//        integrator.setBarcodeImageEnabled(true);
-//        integrator.initiateScan();
 
         ApiInterface serviceMerchandise = ApiClient.getClient().create(ApiInterface.class);
         Call<Merchandise> callMerchandise = serviceMerchandise.getMerchandise(user.getSocialLink());
@@ -121,7 +126,7 @@ public class ScanQRCodeActivity extends AppCompatActivity {
                     Picasso.with(context).load(uri).into(profile);
                     name.setText(merchandise.getMerName());
                     ratingBar.setRating(Float.parseFloat(merchandise.getRating()));
-                    imgScan.setVisibility(View.VISIBLE);
+                    lScan.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -136,6 +141,7 @@ public class ScanQRCodeActivity extends AppCompatActivity {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() == null) {
+                mProgressDialog.hide();
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             } else {
 //                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
@@ -149,10 +155,10 @@ public class ScanQRCodeActivity extends AppCompatActivity {
                         int merId = obj.getInt("mer_id");
                         String discount = obj.getString("discount");
                         if (merId == merchandise.getMerId()) {
-                            postScanned(socialLink, user.getSocialLink(), merId, discount, currentDateTime);
-                            txtDiscount.setText(discount + "% OFF");
+                            postScanned(amount.getText().toString(), socialLink, user.getSocialLink(), merId, discount, currentDateTime);
+//                            txtDiscount.setText(discount + "% OFF");
                         } else {
-                            txtDiscount.setText("");
+//                            txtDiscount.setText("");
                             Snackbar snackbar = Snackbar.make(mainBody, "Sorry this QR Code can not readable", Snackbar.LENGTH_LONG);
                             snackbar.show();
                         }
@@ -168,24 +174,30 @@ public class ScanQRCodeActivity extends AppCompatActivity {
         }
     }
 
-    private void postScanned(String userLink, String scannerLink, int merId, String discount, String createdAt) {
-        scan = new Scanned(userLink, scannerLink, merId, discount, createdAt);
+    private void postScanned(String amount, String userLink, final String scannerLink, int merId, String discount, String createdAt) {
+        scan = new Scanned(amount, userLink, scannerLink, merId, discount, createdAt);
         ApiInterface serviceScan = ApiClient.getClient().create(ApiInterface.class);
         Call<Scanned> callScan = serviceScan.postScan(scan);
         callScan.enqueue(new Callback<Scanned>() {
             @Override
             public void onResponse(Call<Scanned> call, Response<Scanned> response) {
                 scan = response.body();
-                if (scan.getSmg() != null) {
-                    dialogExit(scan.getSmg());
+                hideProgressDialog();
+                if (scan.getStatus() != null) {
+                    if (scan.getStatus().equals("Success")) {
+                        dialogResultSuccess(scan);
+                    } else {
+                        dialogResultFail(scan.getStatus(), scan.getSmg());
+                    }
                 } else {
-                    Toast.makeText(getApplicationContext(), "failed", Toast.LENGTH_SHORT).show();
+                    dialogResultFail("Fail", "Please try again!");
                 }
             }
 
             @Override
             public void onFailure(Call<Scanned> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                hideProgressDialog();
+                dialogResultFail("Fail", "Please try again!");
             }
         });
     }
@@ -210,4 +222,82 @@ public class ScanQRCodeActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    private void dialogResultFail(String strTitle, String strMessage) {
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View viewDialog = factory.inflate(R.layout.layout_dialog_result_fail, null);
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.setView(viewDialog);
+        TextView title = (TextView) viewDialog.findViewById(R.id.title);
+        TextView message = (TextView) viewDialog.findViewById(R.id.message);
+        message.setText(strMessage);
+        title.setText(strTitle);
+        TextView activate = (TextView) viewDialog.findViewById(R.id.cancel);
+        activate.setText("OK");
+        activate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void dialogResultSuccess(Scanned scan) {
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View viewDialog = factory.inflate(R.layout.layout_dialog_result_success, null);
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.setView(viewDialog);
+        TextView title = (TextView) viewDialog.findViewById(R.id.title);
+        TextView message = (TextView) viewDialog.findViewById(R.id.message);
+        TextView total = (TextView) viewDialog.findViewById(R.id.total);
+        TextView discount = (TextView) viewDialog.findViewById(R.id.discount);
+        TextView save = (TextView) viewDialog.findViewById(R.id.save);
+        TextView pay = (TextView) viewDialog.findViewById(R.id.pay);
+        total.setText("Total: $" + amount.getText().toString());
+        discount.setText("Discount: " + scan.getDiscount() + "%");
+        save.setText("Saved: $" + scan.getSave());
+        pay.setText("Pay only: $" + scan.getPaid());
+        message.setText(scan.getSmg());
+        title.setText(scan.getStatus());
+        TextView activate = (TextView) viewDialog.findViewById(R.id.cancel);
+        activate.setText("OK");
+        activate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                amount.setText("");
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("Scanning...");
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        hideProgressDialog();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
+    }
 }

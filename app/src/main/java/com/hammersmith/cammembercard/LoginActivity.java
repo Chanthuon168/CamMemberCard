@@ -2,6 +2,7 @@ package com.hammersmith.cammembercard;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -14,6 +15,10 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -52,6 +57,7 @@ import java.util.Arrays;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
     private CallbackManager callbackManager;
@@ -63,9 +69,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private User user, userPref;
     private String strEmail, strPassword;
     private EditText email, password;
-    private LinearLayout lUser, lMerchandise;
     private String strLoginAs = "isUser";
     private AlertDialog dialogForgot;
+    private CheckBox checkbox;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -73,6 +79,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private GoogleApiClient client;
     private ForgotPassword forgotPassword;
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +107,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Toast.makeText(LoginActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        setContentView(R.layout.activity_login);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_sign_in);
         findViewById(R.id.signUp).setOnClickListener(this);
         findViewById(R.id.btnFb).setOnClickListener(this);
         findViewById(R.id.btnGoogleSignIn).setOnClickListener(this);
@@ -105,10 +118,18 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         findViewById(R.id.txtForgetPass).setOnClickListener(this);
         email = (EditText) findViewById(R.id.input_email);
         password = (EditText) findViewById(R.id.input_password);
-        lUser = (LinearLayout) findViewById(R.id.lUser);
-        lMerchandise = (LinearLayout) findViewById(R.id.lMerchandise);
-        lUser.setOnClickListener(this);
-        lMerchandise.setOnClickListener(this);
+        checkbox = (CheckBox) findViewById(R.id.checkbox);
+
+        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    strLoginAs = "isMerchandise";
+                } else {
+                    strLoginAs = "isUser";
+                }
+            }
+        });
 
         buildGoogleApiClient(null);
 
@@ -116,13 +137,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             user = PrefUtils.getCurrentUser(LoginActivity.this);
             if (user.getLoginAs().equals("isMerchandise")) {
                 Intent intentMer = new Intent(LoginActivity.this, MainMerchandiseActivity.class);
-                intentMer.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intentMer);
+                finish();
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             } else {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
                 finish();
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         }
 
@@ -184,7 +206,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         TextView cancel = (TextView) viewDialog.findViewById(R.id.cancel);
         TextView ok = (TextView) viewDialog.findViewById(R.id.ok);
         if (strMessage.equals("Email or password is incorrect")) {
-            cancel.setText("Try Again");
+            cancel.setText("Close");
             ok.setVisibility(View.GONE);
         } else {
             cancel.setText("Close");
@@ -281,14 +303,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             if (profileGoogle.equals("null")) {
                 profileGoogle = ApiClient.BASE_URL + "images/user.png";
             }
-            user = new User();
-            user.setName(nameGoogle);
-            user.setEmail(emailGoogle);
-            user.setSocialLink(linkGoogle);
-            user.setPhoto(profileGoogle);
-            user.setLoginAs("isUser");
-            user.setSocialType("gg");
-            PrefUtils.setCurrentUser(user, LoginActivity.this);
             saveUserSocial(nameGoogle, emailGoogle, profileGoogle, linkGoogle, "gg");
             signOut();
         } else {
@@ -328,14 +342,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         linkFb = json.getString("id");
                         Log.d("facebookData", nameFb + emailFb + linkFb);
                         String photo = "https://graph.facebook.com/" + linkFb + "/picture?type=large";
-                        user = new User();
-                        user.setName(nameFb);
-                        user.setEmail(emailFb);
-                        user.setSocialLink(linkFb);
-                        user.setPhoto(photo);
-                        user.setLoginAs("isUser");
-                        user.setSocialType("fb");
-                        PrefUtils.setCurrentUser(user, LoginActivity.this);
                         saveUserSocial(nameFb, emailFb, photo, linkFb, "fb");
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -349,7 +355,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         request.executeAsync();
     }
 
-    private void saveUserSocial(String name, String email, String photo, String socialLink, String socialType) {
+    private void saveUserSocial(final String name, final String email, final String photo, final String socialLink, final String socialType) {
         showProgressDialog();
         user = new User(name, email, photo, socialLink, socialType);
         ApiInterface serviceUserLogin = ApiClient.getClient().create(ApiInterface.class);
@@ -360,10 +366,20 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 user = response.body();
                 if (user != null) {
                     if (user.getMsg().equals("success")) {
+                        String photo = user.getPhoto();
+                        user = new User();
+                        user.setName(name);
+                        user.setEmail(email);
+                        user.setSocialLink(socialLink);
+                        user.setPhoto(photo);
+                        user.setLoginAs("isUser");
+                        user.setSocialType(socialType);
+                        PrefUtils.setCurrentUser(user, LoginActivity.this);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         startActivity(intent);
                         finish();
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }
                 }
                 hideProgressDialog();
@@ -402,12 +418,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 strPassword = password.getText().toString();
                 loginByEmail(strLoginAs, strEmail, strPassword);
                 break;
-            case R.id.lUser:
-                updateLayout(true);
-                break;
-            case R.id.lMerchandise:
-                updateLayout(false);
-                break;
             case R.id.txtForgetPass:
                 dialogForgotPass();
                 break;
@@ -436,6 +446,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         Intent intent = new Intent(LoginActivity.this, MainMerchandiseActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         startActivity(intent);
+                        finish();
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     } else {
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -575,18 +587,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.disconnect();
-    }
-
-    private void updateLayout(Boolean layout) {
-        if (layout) {
-            lUser.setBackgroundResource(R.drawable.bg_normal_user);
-            lMerchandise.setBackgroundResource(R.color.transparent);
-            strLoginAs = "isUser";
-        } else {
-            lMerchandise.setBackgroundResource(R.drawable.bg_merchandise);
-            lUser.setBackgroundResource(R.color.transparent);
-            strLoginAs = "isMerchandise";
-        }
     }
 
     private void dialog(String strMessage) {

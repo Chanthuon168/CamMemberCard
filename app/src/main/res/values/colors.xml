@@ -2,7 +2,9 @@
 <resources>
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorPrimaryLight">#58b3fc</color>
     <color name="colorAccent">#03A9F4</color>
+    <color name="bg_user">#e7f4ff</color>
     <color name="primary_light">#a6cff1</color>
     <color name="primary_text">#212121</color>
     <color name="primary_text_light">#2d2d2d</color>
@@ -14,15 +16,20 @@
     <color name="red">#e12f07</color>
     <color name="red_light">#f16544</color>
     <color name="red_press">#e45433</color>
-    <color name="facebook">#3b5998</color>
+    <color name="facebook">#2961f2</color>
     <color name="facebook_press">#2f4e8e</color>
     <color name="green">#28c748</color>
     <color name="red_dark">#c92702</color>
     <color name="bgLogin">#5baded</color>
     <color name="transparent_white">#50ffffff</color>
+    <color name="transparent_black">#50000000</color>
     <color name="transparent">#00ffffff</color>
     <color name="transparent_white_dark">#90ffffff</color>
     <color name="google">#D84B37</color>
     <color name="google_press">#d73f2a</color>
     <color name="transparent_red">#80e45433</color>
+    <color name="green_light">#6ceb9f</color>
+    <color name="yellow">#daae3d</color>
+    <color name="bg_border_outlet">#fce2dd</color>
+    <color name="bg_sign_in">#003ab7</color>
 </resources>

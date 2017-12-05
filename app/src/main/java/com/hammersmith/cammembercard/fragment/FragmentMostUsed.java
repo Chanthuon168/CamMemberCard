@@ -56,7 +56,7 @@ public class FragmentMostUsed extends Fragment {
         swipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
         recyclerView.setNestedScrollingEnabled(false);
         swipeRefresh.setRefreshing(true);
-        swipeRefresh.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN, Color.CYAN);
+        swipeRefresh.setColorSchemeResources(R.color.yellow);
 
         user = PrefUtils.getCurrentUser(getActivity());
         Log.d("userId", user.getSocialLink());

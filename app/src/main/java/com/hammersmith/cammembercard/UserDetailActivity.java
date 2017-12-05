@@ -1,6 +1,7 @@
 package com.hammersmith.cammembercard;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,9 +15,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.hammersmith.cammembercard.adapter.AdapterHistory;
-import com.hammersmith.cammembercard.adapter.AdapterPeopleUsing;
+import com.hammersmith.cammembercard.model.MemberCard;
+import com.hammersmith.cammembercard.model.Scan;
 import com.hammersmith.cammembercard.model.Scanned;
-import com.hammersmith.cammembercard.model.User;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class UserDetailActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -39,7 +41,12 @@ public class UserDetailActivity extends AppCompatActivity {
     private int id;
     private SwipeRefreshLayout swipeRefresh;
     private RatingBar ratingBar;
+    private Scan mScan;
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +59,7 @@ public class UserDetailActivity extends AppCompatActivity {
         scanned = (TextView) findViewById(R.id.scanned);
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
 
-        swipeRefresh = (SwipeRefreshLayout)findViewById(R.id.swiperefresh);
+        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         swipeRefresh.setRefreshing(true);
         swipeRefresh.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN, Color.CYAN);
 
@@ -64,15 +71,19 @@ public class UserDetailActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
             }
         });
-        if (getIntent() != null) {
-            id = getIntent().getIntExtra("id",0);
-            strProfile = getIntent().getStringExtra("photo");
-            strName = getIntent().getStringExtra("name");
-            strScanned = getIntent().getStringExtra("scanned");
-            strRating = getIntent().getStringExtra("rating");
+
+        Intent intent = getIntent();
+        mScan = (Scan) intent.getSerializableExtra("scan");
+        if (mScan != null) {
+            id = mScan.getId();
+            strProfile = mScan.getPhoto();
+            strName = mScan.getName();
+            strScanned = mScan.getNumberScanned();
+            strRating = mScan.getRating();
             Uri uri = Uri.parse(strProfile);
             context = profile.getContext();
             Picasso.with(context).load(uri).into(profile);
@@ -80,9 +91,9 @@ public class UserDetailActivity extends AppCompatActivity {
             ratingBar.setRating(Float.parseFloat(strRating));
             int num_scanned = Integer.parseInt(strScanned);
             String time = "";
-            if (num_scanned > 1){
+            if (num_scanned > 1) {
                 time = " times";
-            }else{
+            } else {
                 time = " time";
             }
             scanned.setText("Scanned " + num_scanned + time);
@@ -101,7 +112,7 @@ public class UserDetailActivity extends AppCompatActivity {
                 scans = response.body();
                 swipeRefresh.setRefreshing(false);
                 swipeRefresh.setEnabled(false);
-                if (scans.size() > 0){
+                if (scans.size() > 0) {
                     adapter = new AdapterHistory(UserDetailActivity.this, scans);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
@@ -113,5 +124,12 @@ public class UserDetailActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
     }
 }

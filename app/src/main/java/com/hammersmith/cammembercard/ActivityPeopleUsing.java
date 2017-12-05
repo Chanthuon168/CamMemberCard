@@ -1,5 +1,6 @@
 package com.hammersmith.cammembercard;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hammersmith.cammembercard.adapter.AdapterPeopleUsing;
+import com.hammersmith.cammembercard.adapter.AdapterPayment;
 import com.hammersmith.cammembercard.model.Scanned;
 import com.hammersmith.cammembercard.model.User;
 
@@ -22,11 +23,12 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ActivityPeopleUsing extends AppCompatActivity {
     private Toolbar toolbar;
     private RecyclerView recyclerView;
-    private AdapterPeopleUsing adapter;
+    private AdapterPayment adapter;
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout swipeRefresh;
     private List<Scanned> scans = new ArrayList<>();
@@ -34,6 +36,11 @@ public class ActivityPeopleUsing extends AppCompatActivity {
     private User user;
     private LinearLayout lMessage;
     private TextView txtMessage;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +54,8 @@ public class ActivityPeopleUsing extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
             }
         });
 
@@ -79,7 +87,7 @@ public class ActivityPeopleUsing extends AppCompatActivity {
                 swipeRefresh.setRefreshing(false);
                 if (scans.size() > 0) {
                     sizeScan = scans.size();
-                    adapter = new AdapterPeopleUsing(ActivityPeopleUsing.this, scans);
+                    adapter = new AdapterPayment(ActivityPeopleUsing.this, scans);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                 } else {
@@ -107,7 +115,7 @@ public class ActivityPeopleUsing extends AppCompatActivity {
                 if (scans != null) {
                     if (sizeScan != scans.size()) {
                         sizeScan = scans.size();
-                        adapter = new AdapterPeopleUsing(ActivityPeopleUsing.this, scans);
+                        adapter = new AdapterPayment(ActivityPeopleUsing.this, scans);
                         recyclerView.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
                     }
@@ -122,5 +130,11 @@ public class ActivityPeopleUsing extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
     }
 }

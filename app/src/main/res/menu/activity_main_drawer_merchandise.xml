@@ -7,17 +7,17 @@
             android:icon="@drawable/qrcode_scan_merchandise"
             android:title="Scan QR Code" />
         <item
-            android:id="@+id/people_using"
-            android:icon="@drawable/account_multiple_merchandise_menu"
-            android:title="People Using" />
-        <item
-            android:id="@+id/most_scan"
+            android:id="@+id/using"
             android:icon="@drawable/account_box_menu"
-            android:title="Most Scan" />
+            android:title="People Using" />
         <item
             android:id="@+id/today_scan"
             android:icon="@drawable/account_card_details_menu"
             android:title="Today Scan" />
+        <item
+            android:id="@+id/payment"
+            android:icon="@drawable/tag_multiple"
+            android:title="Payment" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/file_document_box"

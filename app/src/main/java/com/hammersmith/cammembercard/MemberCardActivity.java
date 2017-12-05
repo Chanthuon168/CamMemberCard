@@ -1,6 +1,7 @@
 package com.hammersmith.cammembercard;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MemberCardActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -32,6 +34,10 @@ public class MemberCardActivity extends AppCompatActivity {
     private int sizeMembership;
     private User user;
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +52,18 @@ public class MemberCardActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
             }
         });
-        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        swipeRefresh = (SwipeRefreshLayout)findViewById(R.id.swiperefresh);
+        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         recyclerView.setNestedScrollingEnabled(false);
         swipeRefresh.setRefreshing(true);
-        swipeRefresh.setColorSchemeColors(Color.RED, Color.BLUE, Color.GREEN, Color.CYAN);
+        swipeRefresh.setColorSchemeResources(R.color.yellow);
         user = PrefUtils.getCurrentUser(this);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -86,6 +93,7 @@ public class MemberCardActivity extends AppCompatActivity {
         });
 
     }
+
     private void refreshData() {
         ApiInterface serviceMembership = ApiClient.getClient().create(ApiInterface.class);
         Call<List<MemberCard>> callMember = serviceMembership.getMembershipCard(user.getSocialLink());
@@ -108,5 +116,11 @@ public class MemberCardActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_righ);
     }
 }
